@@ -27,9 +27,12 @@ export default function Navbar() {
     <nav className="bg-[#051109] backdrop-blur-md text-white sticky top-0 z-50 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
         {/* 1. Logo */}
-        <div className="text-[#c7eecb] text-2xl font-bold font-serif tracking-normal shrink-0">
+        <Link href={"/"}>
+          <div className="text-[#c7eecb] text-2xl font-bold font-serif tracking-normal shrink-0">
           plantx
-        </div>
+          </div>
+        </Link>
+        
 
         <form
           onSubmit={handleSearch}

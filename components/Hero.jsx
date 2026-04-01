@@ -28,7 +28,7 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full z-12 text-center  md:py-20  md:mt-0">
         
         {/* Re-styling the Content for a dark background */}
-        <div className="space-y-10 flex flex-col items-center">
+        <div className="space-y-12 flex flex-col items-center">
           
           {/* Badge - Match colors to the dark theme */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 text-white rounded-full text-sm font-bold tracking-wide uppercase backdrop-blur-sm border border-white/10">
@@ -65,7 +65,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
+    
     </header>
   );
 }
