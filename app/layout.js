@@ -1,20 +1,21 @@
-import './globals.css'
-import Navbar from '@/components/Navbar';
-import {CartProvider} from './context/CartContext.js'
+import "./globals.css";
+import Navbar from "@/components/Navbar";
+import { CartProvider } from "./context/CartContext.js";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-           <Navbar />
         <main>
-          {children}
+          <AuthProvider>
+            <CartProvider>
+              <Navbar />
+              {children}
+            </CartProvider>
+          </AuthProvider>
         </main>
-        </CartProvider>
-       
       </body>
     </html>
   );
 }
-

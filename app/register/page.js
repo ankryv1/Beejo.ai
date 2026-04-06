@@ -1,55 +1,100 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
 
-export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
+export default function RegisterPage() {
+  const { login } = useAuth();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Signup failed");
+
+      login(data.user);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-green-300 to-green-200 px-4">
-      {/* Glass Card */}
-      <div className="w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8">
-        {/* Title */}
-        <h2 className="text-3xl font-semibold text-white text-center mb-6">
-          {isLogin ? "Welcome Back" : "Create Account"}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 px-4">
+      
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-8">
+        
+        <h2 className="text-3xl font-bold text-center mb-6 text-white">
+          Create New Account 
         </h2>
 
-        {/* Form */}
-        <form className="space-y-5">
-          {!isLogin && (
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full p-3 rounded-xl bg-white/20 text-white placeholder-white/70 outline-none focus:ring-2 focus:ring-cyan-300"
-            />
-          )}
+        {error && (
+          <p className="text-red-400 text-sm mb-3 text-center">{error}</p>
+        )}
+
+        <form onSubmit={handleSignup} className="space-y-4">
+          
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
 
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 rounded-xl bg-white/20 text-white placeholder-white/70 outline-none focus:ring-2 focus:ring-cyan-300"
+            className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
 
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-3 rounded-xl bg-white/20 text-white placeholder-white/70 outline-none focus:ring-2 focus:ring-cyan-300"
+            className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
 
-          {/* Button */}
-          <button className="w-full bg-white text-black py-3 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg">
-            {isLogin ? "Login" : "Sign Up"}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition"
+          >
+            {loading ? "Creating..." : "Sign Up"}
           </button>
         </form>
 
-        {/* Toggle */}
-        <p className="text-center text-blue-500 mt-6 text-sm">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}
-          <span
-            onClick={() => setIsLogin(!isLogin)}
-            className="ml-2 text-indigo-900 font-bold cursor-pointer hover:underline"
-          >
-            {isLogin ? "Sign Up" : "Login"}
-          </span>
+        <p className="text-center mt-4 text-gray-300">
+          Already have an account?{" "}
+          <Link href="/login" className="text-blue-400 font-semibold">
+            Login
+          </Link>
         </p>
       </div>
     </div>
