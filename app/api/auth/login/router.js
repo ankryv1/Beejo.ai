@@ -1,6 +1,8 @@
 import connectDB from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import userModel from "@/models/user.model";
+import { cookies } from "next/headers";
+import jwt from 'jsonwebtoken'
 
 export async function POST(req) {
   try {
@@ -13,6 +15,8 @@ export async function POST(req) {
     if (!checkPass) {
       return NextRequest({ message: "Password is wrong" }, { status: 400 });
     }
+    const token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET,{expiresIn:'5d'})
+    cookies.set("token", token);
     return NextResponse(
       { message: "User logged in successfully" },
       { status: 200 },
@@ -21,3 +25,4 @@ export async function POST(req) {
     req.NextResponse({ message: "Internal server Error" }, { status: 500 });
   }
 }
+
