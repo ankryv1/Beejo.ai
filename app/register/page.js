@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterPage() {
-  const { login } = useAuth();
+  const { register } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,20 +18,8 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ name, email, password }),
-        }
-      );
+     await register(email, password, name);
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Signup failed");
-
-      login(data.user);
     } catch (err) {
       setError(err.message);
     } finally {

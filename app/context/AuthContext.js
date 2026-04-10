@@ -10,6 +10,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const loginUser = async (email, password)=>{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,{
+      method:"POST",
+      headers:{ "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({email, password})
+    });
+     const data =await res.json();
+    if(res.ok){
+     
+      setUser(data.user);
+      setIsLoggedIn(true);
+      router.push("/")
+    }
+    else{
+      throw new Error(data.message || "Login Failed");
+    }
+  }
+
   // 1. Check session on load (Call your backend /me or /verify route)
   useEffect(() => {
     const initAuth = async () => {
@@ -34,11 +53,24 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    setIsLoggedIn(true);
-    router.push("/");
-  };
+  
+
+  const register = async (email, password, name)=>{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,{
+      method: "POST",
+      credentials:"include",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({name, password, email})
+    });
+    const data =await res.json();
+    if(res.ok){
+      setUser(data.user);
+      setIsLoggedIn(true);
+      router.push("/")
+    } else{
+      throw new Error(data.message || "Signup failed")
+    }
+  }
 
   const logout = async () => {
     // Call backend to clear cookie
@@ -49,7 +81,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setIsLoggedIn, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, setIsLoggedIn, loading,  logout, loginUser, register, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

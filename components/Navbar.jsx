@@ -7,6 +7,7 @@ import {
 } from "lucide-react"; 
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Navbar() {
   const {cartCount, fetchCart } = useCart();
 
   
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const {isLoggedIn} = useAuth();
   const user = isLoggedIn ? { name: "Ankit" } : null;
 
   const router = useRouter();
