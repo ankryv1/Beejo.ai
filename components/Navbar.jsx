@@ -1,10 +1,17 @@
 "use client";
 import { useState, useContext } from "react";
 import Link from "next/link";
-import { 
-  ShoppingCart, Menu, X, Search, Package, 
-  User, UserRound, LogOut, Settings 
-} from "lucide-react"; 
+import {
+  ShoppingCart,
+  Menu,
+  X,
+  Search,
+  Package,
+  User,
+  UserRound,
+  LogOut,
+  Settings,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
 import { useAuth } from "@/app/context/AuthContext";
@@ -13,11 +20,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAccountOpen, setIsAccountOpen] = useState(false);
-  const {cartCount, fetchCart } = useCart();
+  const { cartCount, fetchCart } = useCart();
 
-  
-  const {isLoggedIn} = useAuth();
-  const user = isLoggedIn ? { name: "Ankit" } : null;
+  const { isLoggedIn, logout, user, isAdmin } = useAuth();
 
   const router = useRouter();
 
@@ -35,7 +40,7 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);      // later: clear JWT cookie / NextAuth signOut()
+    logout();
     setIsAccountOpen(false);
   };
 
@@ -53,7 +58,6 @@ export default function Navbar() {
   return (
     <nav className="bg-[#051109] backdrop-blur-md text-white sticky top-0 z-50 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
-        
         {/* Logo */}
         <Link href="/" className="shrink-0">
           <div className="text-[#c7eecb] text-2xl font-bold font-serif tracking-normal">
@@ -62,7 +66,10 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Search */}
-        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md relative group">
+        <form
+          onSubmit={handleSearch}
+          className="hidden md:flex flex-1 max-w-md relative group"
+        >
           <input
             type="text"
             placeholder="Search for plants..."
@@ -72,46 +79,61 @@ export default function Navbar() {
                        rounded-xl py-2 pl-12 pr-4 text-base focus:outline-none 
                        focus:border-[#4ADE80] transition-all placeholder:text-gray-600"
           />
-          <Search className="absolute left-3 top-2.5 text-gray-800 group-focus-within:text-[#209a4c]" size={20} />
+          <Search
+            className="absolute left-3 top-2.5 text-gray-800 group-focus-within:text-[#209a4c]"
+            size={20}
+          />
         </form>
 
         {/* Desktop Links */}
         <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link key={link.name} href={link.href}
-              className="relative group text-lg text-gray-300 transition-all duration-300">
+            <Link
+              key={link.name}
+              href={link.href}
+              className="relative group text-lg text-gray-300 transition-all duration-300"
+            >
               <span className="group-hover:text-[#4ADE80] transition-colors duration-300">
                 {link.name}
               </span>
-              <span className="absolute left-0 bottom-[-4px] w-0 h-[2px] bg-[#4ADE80] 
-                               transition-all duration-300 group-hover:w-full" />
+              <span
+                className="absolute left-0 bottom-[-4px] w-0 h-[2px] bg-[#4ADE80] 
+                               transition-all duration-300 group-hover:w-full"
+              />
             </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-4 shrink-0">
-
           {/* Cart — only show when logged in */}
           {isLoggedIn && (
-            <button className="relative flex items-center gap-2 bg-[#1A2E21] border 
-                               border-white/10 px-4 py-2 rounded-full hover:bg-[#253f2d] transition-all">
+            <button
+              className="relative flex items-center gap-2 bg-[#1A2E21] border 
+                               border-white/10 px-4 py-2 rounded-full hover:bg-[#253f2d] transition-all"
+            >
               <ShoppingCart size={18} />
               <span className="hidden sm:inline text-sm font-medium">Cart</span>
-              { cartCount > 0 &&  (<span className="bg-[#4ADE80] text-[#051109] text-[10px] font-bold w-5 h-5 
-                               rounded-full flex items-center justify-center absolute -top-1 -right-1">
-                { cartCount}
-              </span>)}
+              {cartCount > 0 && (
+                <span
+                  className="bg-[#4ADE80] text-[#051109] text-[10px] font-bold w-5 h-5 
+                               rounded-full flex items-center justify-center absolute -top-1 -right-1"
+                >
+                  {cartCount}
+                </span>
+              )}
             </button>
           )}
 
-          {/* ✅ AUTH SECTION — the key part */}
+          {/*  AUTH SECTION — the key part */}
           {isLoggedIn ? (
             // ── LOGGED IN → show avatar + dropdown ──
             <div className="relative">
               <button
                 onClick={() => setIsAccountOpen(!isAccountOpen)}
                 className={`p-2 rounded-full transition-all duration-300 ${
-                  isAccountOpen ? "bg-[#8A9A5B] text-white" : "text-gray-400 hover:bg-white/10"
+                  isAccountOpen
+                    ? "bg-[#8A9A5B] text-white"
+                    : "text-gray-400 hover:bg-white/10"
                 }`}
               >
                 <UserRound size={24} />
@@ -120,20 +142,41 @@ export default function Navbar() {
               {isAccountOpen && (
                 <>
                   {/* backdrop */}
-                  <div className="fixed inset-0 z-40" onClick={() => setIsAccountOpen(false)} />
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsAccountOpen(false)}
+                  />
 
                   {/* dropdown */}
-                  <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl 
-                                  border border-gray-100 py-3 z-50 origin-top-right">
+                  <div
+                    className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl 
+                                  border border-gray-100 py-3 z-50 origin-top-right"
+                  >
                     {/* user info */}
                     <div className="px-4 py-2 mb-2 border-b border-gray-50">
-                      <p className="text-xs font-bold text-[#8A9A5B] uppercase tracking-widest">Welcome back</p>
-                      <p className="text-sm font-semibold text-[#1A2E21]">{user.name}</p>
+                      <p className="text-xs font-bold text-[#8A9A5B] uppercase tracking-widest">
+                        Welcome back
+                      </p>
+                      <p className="text-sm font-semibold text-[#1A2E21]">
+                        {user.name}
+                      </p>
                     </div>
 
-                    <DropdownLink icon={<User size={16} />}    label="My Profile" href="/profile" />
-                    <DropdownLink icon={<Package size={16} />} label="My Orders"  href="/orders" />
-                    <DropdownLink icon={<Settings size={16} />} label="Settings"  href="/settings" />
+                    <DropdownLink
+                      icon={<User size={16} />}
+                      label="My Profile"
+                      href="/profile"
+                    />
+                    <DropdownLink
+                      icon={<Package size={16} />}
+                      label="My Orders"
+                      href="/orders"
+                    />
+                    <DropdownLink
+                      icon={<Settings size={16} />}
+                      label="Settings"
+                      href="/settings"
+                    />
 
                     <div className="my-2 border-t border-gray-100" />
 
@@ -153,18 +196,30 @@ export default function Navbar() {
           ) : (
             // ── NOT LOGGED IN → show Register button ──
             <Link href="/register">
-              <button className="flex items-center gap-2 bg-[#4ADE80] text-[#051109] 
+              <button
+                className="flex items-center gap-2 bg-[#4ADE80] text-[#051109] 
                                  font-semibold text-sm px-5 py-2.5 rounded-full 
                                  hover:bg-[#22c55e] transition-all duration-300 
-                                 hover:shadow-[0_0_20px_rgba(74,222,128,0.4)]">
+                                 hover:shadow-[0_0_20px_rgba(74,222,128,0.4)]"
+              >
                 <User size={16} />
                 Register
               </button>
             </Link>
           )}
+          {isLoggedIn && isAdmin ? (
+            <Link href="/products/admin_add_product">
+              <div  className="p-2 px-4 font-bold bg-[#4ADE80] text-[#051109] rounded-lg hover:bg-[#22c55e] cursor-pointer">
+                Add +
+              </div>
+            </Link>
+          ) : null}
 
           {/* Mobile toggle */}
-          <button className="md:hidden text-gray-400 p-2" onClick={() => setIsOpen(!isOpen)}>
+          <button
+            className="md:hidden text-gray-400 p-2"
+            onClick={() => setIsOpen(!isOpen)}
+          >
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
@@ -172,8 +227,10 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-[#0A1A0F] border-t border-white/5 px-6 py-8 
-                        flex flex-col gap-6">
+        <div
+          className="md:hidden bg-[#0A1A0F] border-t border-white/5 px-6 py-8 
+                        flex flex-col gap-6"
+        >
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
@@ -183,27 +240,38 @@ export default function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Search className="absolute left-3 top-3.5 text-gray-500" size={18} />
+            <Search
+              className="absolute left-3 top-3.5 text-gray-500"
+              size={18}
+            />
           </form>
 
           {navLinks.map((link) => (
-            <Link key={link.name} href={link.href}
+            <Link
+              key={link.name}
+              href={link.href}
               className="text-lg text-gray-300 hover:text-[#4ADE80]"
-              onClick={() => setIsOpen(false)}>
+              onClick={() => setIsOpen(false)}
+            >
               {link.name}
             </Link>
           ))}
 
           {/* Mobile auth */}
           {isLoggedIn ? (
-            <button onClick={handleLogout}
-              className="flex items-center gap-2 text-red-400 text-sm">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-red-400 text-sm"
+            >
               <LogOut size={16} /> Logout
             </button>
           ) : (
-            <Link href="/register" onClick={() => setIsOpen(false)}
+            <Link
+              href="/register"
+              onClick={() => setIsOpen(false)}
               className="bg-[#4ADE80] text-[#051109] font-semibold text-sm 
-                         px-5 py-2.5 rounded-full text-center">
+                         px-5 py-2.5 rounded-full text-center"
+            >
               Register
             </Link>
           )}

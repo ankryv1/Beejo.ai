@@ -33,8 +33,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        // In a startup, you'd fetch your backend here. 
-        // The browser automatically sends the HttpOnly Cookie.
+        
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
           credentials: "include", // CRITICAL for HttpOnly Cookies
         });
@@ -55,6 +54,7 @@ export const AuthProvider = ({ children }) => {
 
   
 
+
   const register = async (email, password, name)=>{
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,{
       method: "POST",
@@ -73,15 +73,17 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = async () => {
-    // Call backend to clear cookie
+    
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
     setUser(null);
     setIsLoggedIn(false);
     router.push("/register");
   };
 
+  const isAdmin = user?.role === "ADMIN"
+
   return (
-    <AuthContext.Provider value={{ user, setIsLoggedIn, loading,  logout, loginUser, register, isLoggedIn }}>
+    <AuthContext.Provider value={{ user, setIsLoggedIn, loading,  logout, loginUser, register, isLoggedIn, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
