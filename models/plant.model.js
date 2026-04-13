@@ -36,7 +36,7 @@ const plantSchema = new mongoose.Schema({
         uppercase: true,
         trim: true,
         required: true,
-        enum:["FRUITS", "INDOOR", "OUTDOOR" , "AIR_PURIFIER", "DECORATIVE", "BEST SELLING"]
+        enum:["FRUITS", "INDOOR", "OUTDOOR" , "AIR_PURIFIER", "DECORATIVE", "BEST_SELLING", "SUMMER_SPECIAL"]
     },
     stock:{
         type: Number,
@@ -44,8 +44,13 @@ const plantSchema = new mongoose.Schema({
         min:0
     },
     rating:{
-        type: true,
+        type: Number,
         default:0
+    },
+    createdBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"users",
+        required: true
     }
 
 }, {timestamps: true})

@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { CartProvider } from "./context/CartContext.js";
 import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({ children }) {
   return (
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
               {children}
             </CartProvider>
           </AuthProvider>
+          <Toaster position="top-right" />
         </main>
       </body>
     </html>

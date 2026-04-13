@@ -11,14 +11,14 @@ export async function GET(req){
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
         if(!token){
-            return NextResponse.json({message:"Not Authenticated ,Login again"}, {status:404})
+            return NextResponse.json({message:"Not Authenticated ,Login again", success: true}, {status:404})
         }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await userModel.findOne({_id: decoded.userId}).select("-password");
-    return NextResponse.json({message:"got me successful", user: user}, {status:200});
+    return NextResponse.json({message:"got me successful", user: user, success: true}, {status:200});
     } catch (error) {
-        return NextResponse.json({message:"Session Expired"}, {status: 401})
+        return NextResponse.json({message:"Session Expired", success: false}, {status: 401})
     }
     
 }

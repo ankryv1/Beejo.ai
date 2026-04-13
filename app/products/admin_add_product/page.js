@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
+import toast from "react-hot-toast";
 
 export default function AddPlantPage() {
   const { isAdmin } = useAuth();
@@ -43,9 +44,11 @@ export default function AddPlantPage() {
         method: "POST",
         body: data,
       });
+      if(res.success == true){
+        toast.success(res.message);
+      }
 
       if (res.ok) {
-        alert("Plant added successfully!");
         setImages([]);
         setPreviews([]);
         setFormData({ // Manual reset for state
@@ -181,8 +184,8 @@ export default function AddPlantPage() {
           </div>
 
           <button 
-            type="submit" disabled={loading}
-            className="w-full bg-[#4ADE80] text-[#051109] py-4 rounded-xl font-bold hover:shadow-[0_0_20px_rgba(74,222,128,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            type="submit" disabled={loading} 
+            className="w-[50%] mx-auto bg-[#4ADE80] text-[#051109] py-4 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Uploading Data..." : "Publish Plant"}
           </button>

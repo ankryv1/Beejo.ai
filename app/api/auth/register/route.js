@@ -10,7 +10,7 @@ export async function POST(req){
     const {email, password, name} = await req.json();
     const checkIfExisting = await userModel.findOne({email});
     if(checkIfExisting){
-        return NextResponse.json({message:"User exists with this email"}, {status:400});
+        return NextResponse.json({message:"User exists with this email", success: true}, {status:400});
     }
     
     const newUser = await userModel.create({email, password, name});
@@ -19,6 +19,6 @@ export async function POST(req){
     cookieStore.set("token", token, {
         httpOnly: true, path: "/"
     })
-    return NextResponse.json({message:"Account created successfully" ,user: {name:newUser.name, email: newUser.email, role: newUser.role}}, {status:201})
+    return NextResponse.json({message:"Account created successfully" ,user: {name:newUser.name, email: newUser.email, role: newUser.role}, success: true}, {status:201})
 
 }

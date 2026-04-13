@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -18,6 +19,8 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({email, password})
     });
      const data =await res.json();
+     if(data.success == true)
+      toast.success(data.message);
     if(res.ok){
      
       setUser(data.user);
@@ -40,11 +43,14 @@ export const AuthProvider = ({ children }) => {
         
         if (res.ok) {
           const data = await res.json();
+
+
           setUser(data.user);
           setIsLoggedIn(true);
         }
       } catch (err) {
         console.error("Auth initialization failed");
+        toast.error(data.message);
       } finally {
         setLoading(false);
       }
@@ -63,18 +69,27 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({name, password, email})
     });
     const data =await res.json();
+
+    if(data.success){
+      toast.success(data.message);
+    }
     if(res.ok){
       setUser(data.user);
       setIsLoggedIn(true);
       router.push("/")
     } else{
+      toast.error(data.message);
       throw new Error(data.message || "Signup failed")
     }
   }
 
   const logout = async () => {
     
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
+    const data = await res.json();
+    if(data.success){
+      toast.success(data.message);
+    }
     setUser(null);
     setIsLoggedIn(false);
     router.push("/register");

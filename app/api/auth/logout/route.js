@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const cookieStore = await cookies();
-    cookieStore.set(null);
-    return NextResponse.json({message: "Successfully Logged Out"}, {status: 200})
+    cookieStore.delete("token");
+    return NextResponse.json({message: "Successfully Logged Out",  success: true}, {status: 200})
 }
