@@ -36,7 +36,7 @@ const plantSchema = new mongoose.Schema({
         uppercase: true,
         trim: true,
         required: true,
-        enum:["FRUITS", "INDOOR", "OUTDOOR" , "AIR_PURIFIER", "DECORATIVE", "BEST_SELLING", "SUMMER_SPECIAL"]
+        enum:["FRUITS", "INDOOR", "OUTDOOR" , "AIR_PURIFIER", "DECORATIVE", "BEST_SELLING", "SUMMER_SPECIAL", "POPULAR"]
     },
     stock:{
         type: Number,
@@ -51,6 +51,28 @@ const plantSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:"users",
         required: true
+    },
+    reviews:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"reviews"
+    }],
+    lightRequirements:{
+        type:String,
+        enum:["FULL_SHADE", "PARTIAL_SHADE", "PARTIAL_SUN", "FULL_SUN"],
+        required: [true, "Light requirements is required"]
+    },
+    wateringRequirements:{
+        type:String,
+        required: [true, "Watering requirements is required"]
+    },
+    petFrendly:{
+        type: Boolean,
+        default:false
+    },
+    difficulty:{
+        type: String,
+        enum:["EASY", "MEDIUM", "HARD"],
+        default: "EASY"
     }
 
 }, {timestamps: true})

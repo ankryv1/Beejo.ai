@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 export default function AddPlantPage() {
   const { isAdmin } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState([]); 
-  const [previews, setPreviews] = useState([]); 
+  const [images, setImages] = useState([]);
+  const [previews, setPreviews] = useState([]);
 
   const [formData, setFormData] = useState({
     plantName: "",
@@ -15,7 +15,11 @@ export default function AddPlantPage() {
     originalPrice: "",
     discountedPrice: "",
     category: "INDOOR",
-    stock: 0, // Initializing stock
+    stock: 0,
+    lightRequirements: "PARTIAL_SUN", // New field
+    wateringRequirements: "",        // New field
+    difficulty: "EASY",              // New field
+    petFriendly: false,              // New field (matches petFrendly in schema)
   });
 
   const handleImageChange = (e) => {
@@ -35,37 +39,39 @@ export default function AddPlantPage() {
     setLoading(true);
     try {
       const data = new FormData();
-      // Appending all text fields
-      Object.keys(formData).forEach(key => data.append(key, formData[key]));
-      // Appending images
+      Object.keys(formData).forEach((key) => data.append(key, formData[key]));
       images.forEach((image) => data.append("images", image));
 
       const res = await fetch("/api/plants/add", {
         method: "POST",
         body: data,
       });
-      if(res.success == true){
-        toast.success(res.message);
-      }
+
+      const result = await res.json(); // Parse JSON first
 
       if (res.ok) {
+        toast.success(result.message || "Plant added successfully!");
         setImages([]);
         setPreviews([]);
-        setFormData({ // Manual reset for state
+        setFormData({
           plantName: "",
           description: "",
           originalPrice: "",
           discountedPrice: "",
           category: "INDOOR",
           stock: 0,
+          lightRequirements: "PARTIAL_SUN",
+          wateringRequirements: "",
+          difficulty: "EASY",
+          petFriendly: false,
         });
         e.target.reset();
       } else {
-        const error = await res.json();
-        alert(error.message);
+        toast.error(result.message || "Something went wrong");
       }
     } catch (err) {
       console.error(err);
+      toast.error("Failed to upload plant");
     } finally {
       setLoading(false);
     }
@@ -75,119 +81,159 @@ export default function AddPlantPage() {
 
   return (
     <div className="min-h-screen bg-[#051109] py-12 px-4 text-white">
-      <div className="max-w-3xl mx-auto bg-[#0A1A0F] rounded-2xl shadow-2xl border border-white/10 p-8">
-        <h1 className="text-3xl font-bold text-[#edf3ef] mb-8 tracking-tight">Add New Plant</h1>
-        
+      <div className="max-w-4xl mx-auto bg-[#0A1A0F] rounded-2xl shadow-2xl border border-white/10 p-8">
+        <h1 className="text-3xl font-bold text-[#edf3ef] mb-8 tracking-tight text-center">Add New Plant</h1>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* Plant Name */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-400">Plant Name</label>
-              <input 
+              <input
                 type="text" required
                 value={formData.plantName}
-                placeholder="e.g. Monstera Deliciosa"
-                className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white placeholder:text-gray-600 transition-all"
-                onChange={(e) => setFormData({...formData, plantName: e.target.value})}
+                className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
+                onChange={(e) => setFormData({ ...formData, plantName: e.target.value })}
               />
             </div>
 
             {/* Category */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-400">Category</label>
-              <select 
+              <select
                 value={formData.category}
-                className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white appearance-none cursor-pointer"
-                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
-                <option value="INDOOR">Indoor</option>
-                <option value="OUTDOOR">Outdoor</option>
-                <option value="FRUITS">Fruits</option>
-                <option value="AIR_PURIFIER">Air Purifier</option>
-                <option value="DECORATIVE">Decorative</option>
-                <option value="GIFTS">Gifts</option>
+                {["FRUITS", "INDOOR", "OUTDOOR", "AIR_PURIFIER", "DECORATIVE", "BEST_SELLING", "SUMMER_SPECIAL", "POPULAR"].map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
               </select>
             </div>
 
-            {/* Original Price */}
+            {/* Prices */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-400">Original Price (₹)</label>
-              <input 
+              <input
                 type="number" required
                 value={formData.originalPrice}
                 className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
-                onChange={(e) => setFormData({...formData, originalPrice: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
               />
             </div>
 
-            {/* Discounted Price */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-400">Discounted Price (₹)</label>
-              <input 
+              <input
                 type="number" required
                 value={formData.discountedPrice}
                 className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
-                onChange={(e) => setFormData({...formData, discountedPrice: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, discountedPrice: e.target.value })}
               />
             </div>
 
-            {/* NEW: Stock Quantity */}
-            <div className="flex flex-col gap-2 md:col-span-2">
-              <label className="text-sm font-medium text-gray-400">Stock Quantity (Items available)</label>
-              <input 
-                type="number" required
-                value={formData.stock}
-                placeholder="0"
-                min="0"
+            {/* Light Requirements */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-400">Light Requirements</label>
+              <select
+                value={formData.lightRequirements}
                 className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
-                onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, lightRequirements: e.target.value })}
+              >
+                <option value="FULL_SHADE">Full Shade</option>
+                <option value="PARTIAL_SHADE">Partial Shade</option>
+                <option value="PARTIAL_SUN">Partial Sun</option>
+                <option value="FULL_SUN">Full Sun</option>
+              </select>
+            </div>
+
+            {/* Difficulty */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-400">Difficulty</label>
+              <select
+                value={formData.difficulty}
+                className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
+                onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
+              >
+                <option value="EASY">Easy</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HARD">Hard</option>
+              </select>
+            </div>
+
+            {/* Watering Requirements */}
+            <div className="flex flex-col gap-2 md:col-span-1">
+              <label className="text-sm font-medium text-gray-400">Watering Schedule</label>
+              <input
+                type="text" required
+                placeholder="e.g. Once a week"
+                value={formData.wateringRequirements}
+                className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
+                onChange={(e) => setFormData({ ...formData, wateringRequirements: e.target.value })}
               />
             </div>
+
+            {/* Stock */}
+            <div className="flex flex-col gap-2 md:col-span-1">
+              <label className="text-sm font-medium text-gray-400">Stock Quantity</label>
+              <input
+                type="number" required
+                value={formData.stock}
+                className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
+                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+              />
+            </div>
+          </div>
+
+          {/* Pet Friendly Toggle */}
+          <div className="flex items-center gap-3 p-3 bg-[#1A2E21] rounded-xl border border-white/10 w-fit">
+            <input
+              type="checkbox"
+              id="petFriendly"
+              checked={formData.petFriendly}
+              className="w-5 h-5 accent-[#4ADE80]"
+              onChange={(e) => setFormData({ ...formData, petFriendly: e.target.checked })}
+            />
+            <label htmlFor="petFriendly" className="text-sm font-medium text-gray-300 cursor-pointer">
+              Is this plant Pet Friendly?
+            </label>
           </div>
 
           {/* Description */}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-gray-400">Description</label>
-            <textarea 
-              rows="4" required
+            <textarea
+              rows="3" required
               value={formData.description}
-              placeholder="Tell us about this plant..."
-              className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white placeholder:text-gray-600"
-              onChange={(e) => setFormData({...formData, description: e.target.value})}
+              className="p-3 bg-[#1A2E21] border border-white/10 rounded-xl focus:border-[#4ADE80] outline-none text-white"
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
           </div>
 
-          {/* Image Upload Section */}
+          {/* Images */}
           <div className="flex flex-col gap-3 p-4 bg-[#14261a] border border-dashed border-white/20 rounded-2xl">
-            <label className="text-sm font-semibold text-[#4ADE80]">Plant Images</label>
-            <input 
-              type="file" multiple accept="image/*" 
-              className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#4ADE80] file:text-[#051109] hover:file:bg-[#22c55e] cursor-pointer"
+            <label className="text-sm font-semibold text-[#4ADE80]">Plant Images (Required)</label>
+            <input
+              type="file" multiple accept="image/*"
+              className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-[#4ADE80] file:text-[#051109] cursor-pointer"
               onChange={handleImageChange}
             />
-            
-            <div className="flex flex-wrap gap-4 mt-2">
+            <div className="flex flex-wrap gap-4">
               {previews.map((url, i) => (
                 <div key={i} className="relative group">
-                  <img src={url} alt="preview" className="w-24 h-24 object-cover rounded-xl border border-white/10" />
-                  <button 
-                    type="button"
-                    onClick={() => removeImage(i)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    ✕
-                  </button>
+                  <img src={url} alt="preview" className="w-20 h-20 object-cover rounded-xl border border-white/10" />
+                  <button type="button" onClick={() => removeImage(i)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">✕</button>
                 </div>
               ))}
             </div>
           </div>
 
-          <button 
-            type="submit" disabled={loading} 
-            className="w-[50%] mx-auto bg-[#4ADE80] text-[#051109] py-4 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          <button
+            type="submit" disabled={loading}
+            className="w-full md:w-[50%] block mx-auto bg-[#4ADE80] text-[#051109] py-4 rounded-xl font-bold transition-all disabled:opacity-50"
           >
-            {loading ? "Uploading Data..." : "Publish Plant"}
+            {loading ? "Publishing..." : "Publish Plant"}
           </button>
         </form>
       </div>
