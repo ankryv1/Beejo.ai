@@ -112,10 +112,30 @@ export default function ProductInfo({ plant }) {
     { icon: RotateCcw, text: "Easy 7-day return if plant arrives damaged" },
   ];
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleShare = async () => {
+    const url = window.location.href;
+
+    try{
+      if(navigator.share){
+        await navigator.share({
+          title:"Check out this plant on Bijjo!",
+          url: url
+        })
+        return;
+      }
+
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+
+      setTimeout(() => {
+        setTimeout(false)
+      }, 2000);
+    }
+
+    catch (err) {
+      alert("Sharing failed. Please copy the URL manually.");
+      console.error("Shared failed:", err);
+    }
   };
 
   return (
@@ -334,7 +354,7 @@ export default function ProductInfo({ plant }) {
       <PincodeChecker />
 
       {/* ── Trust Badges ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
         <TrustBadge icon={Truck} title="Free Shipping" sub="Orders above ₹599" />
         <TrustBadge icon={Shield} title="Secure Pay" sub="100% safe checkout" />
         <TrustBadge icon={Package} title="Safe Packing" sub="Damage-proof box" />

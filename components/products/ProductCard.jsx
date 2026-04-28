@@ -43,7 +43,7 @@ const ProductCard = ({ product }) => {
       <div className="p-4 flex flex-col justify-between h-[35%]">
         <div>
           <div className="flex justify-between items-start">
-            <span className="text-[14px] font-bold text-[#ffffff] uppercase tracking-wider bg-emerald-700 p-2 rounded-2xl ">
+            <span className="text-[8px] sm:text-[14px] sm:font-bold text-[#ffffff] uppercase tracking-wider mr-3 bg-emerald-700 p-1 sm:p-2  rounded-md sm:rounded-xl ">
               {product.category?.replace("_", " ")}
             </span>
 
