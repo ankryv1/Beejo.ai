@@ -28,7 +28,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Shop", href: "/shop" },
+    { name: "Shop", href: "/products" },
     { name: "Plant Care", href: "/care" },
   ];
 
