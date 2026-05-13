@@ -128,7 +128,7 @@ export default function ProductInfo({ plant }) {
       setCopied(true);
 
       setTimeout(() => {
-        setTimeout(false)
+        setCopied(false)
       }, 2000);
     }
 

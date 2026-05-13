@@ -1,61 +1,87 @@
-import connectDB from "@/lib/mongodb";
-import Cart from "@/models/cart.model";
-import plantModel from "@/models/plant.model";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+import connectDB from "@/lib/mongodb";
 
+import Cart from "@/models/cart.model";
+import Plant from "@/models/plant.model";
+import { SHIPPING_DIMENSIONS } from "@/utils/shippingDimentions";
+
+export async function POST(req) {
   await connectDB();
 
   try {
-
     const body = await req.json();
 
-    const { userId, plantId } = body;
-    if (!userId || !plantId) {
-      return NextResponse.json(
-        { message: "userId and plantId are required" },
-        { status: 400 }
-      );
+    const { userId, plantId, size, color, qty } = body;
+
+    // Find plant
+    const plant = await Plant.findById(plantId);
+
+    if (!plant) {
+      return NextResponse.json({ message: "Plant not found" }, { status: 404 });
     }
 
-    const plantExists = await plantModel.findById(plantId);
-    if (!plantExists) {
-      return NextResponse.json(
-        { message: "Plant not found" },
-        { status: 404 }
-      );
-    }
-
-    const cart = await Cart.findOne({
-      user: userId
+    // Find or create cart
+    let cart = await Cart.findOne({
+      user: userId,
     });
 
     if (!cart) {
-      return NextResponse.json(
-        { message: "Cart not found" },
-        { status: 404 }
-      );
+      cart = await Cart.create({
+        user: userId,
+        items: [],
+      });
     }
 
-    const existingPlant = cart.items.find(item => item.plant.toString() === plantId);
+    // Match same variant
+    const existingPlant = cart.items.find(
+      (item) =>
+        item.plant.toString() === plantId &&
+        item.size === size &&
+        item.color === color,
+    );
 
     if (existingPlant) {
-      existingPlant.quantity += 1;
+      existingPlant.quantity += qty;
     } else {
-      cart.items.push({ plant: plantId, quantity: 1 });
+      cart.items.push({
+        plant: plant._id,
+
+        plantSnapshot: {
+          plantName: plant.name,
+          image: plant.images[0],
+        },
+
+        size,
+        color,
+
+        quantity: qty,
+
+        originalPrice: plant.originalPrice,
+
+        discountedPrice: plant.discountedPrice,
+
+        shipping: 
+          SHIPPING_DIMENSIONS[size]
+        
+      });
     }
 
     await cart.save();
 
     return NextResponse.json(
-      { message: "Plant added to cart successfully" },
-      { status: 200 }
+      {
+        message: "Plant added to cart successfully",
+        cart,
+      },
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
-      { message: error.message },
-      { status: 500 }
+      {
+        message: error.message,
+      },
+      { status: 500 },
     );
   }
 }
