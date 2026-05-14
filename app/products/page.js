@@ -1,6 +1,7 @@
+export const dynamic = "force-dynamic";
 import ProductGrid from "@/components/products/ProductGrid";
 import React from "react";
-
+  
 const page = async () => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/plants/getAll`,
