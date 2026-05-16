@@ -255,7 +255,7 @@ export default function AddPlantPage() {
           </div>
 
           {/* IMAGES */}
-          <input type="file" multiple onChange={handleImageChange} className="border-2 p-2 rounded-2xl"/>
+          <input type="file" multiple onChange={handleImageChange} name="images" className="border-2 p-2 rounded-2xl"/>
 
           <div className="flex gap-2 flex-wrap">
             {previews.map((url, i) => (

@@ -11,7 +11,7 @@ export async function GET(req){
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
         if(!token){
-            return NextResponse.json({message:"Not Authenticated ,Login again", success: true}, {status:404})
+            return NextResponse.json({message:"Not Authenticated ,Login again", success: false}, {status:404})
         }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
