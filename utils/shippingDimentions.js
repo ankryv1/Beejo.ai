@@ -2,9 +2,9 @@ export const SHIPPING_DIMENSIONS = {
 
   SMALL: {
     weight: 0.5,
-    length: 10,
-    breadth: 10,
-    height: 10
+    length: 15,
+    breadth: 15,
+    height: 20
   },
 
   MEDIUM: {

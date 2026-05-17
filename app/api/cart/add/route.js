@@ -14,13 +14,31 @@ export async function POST(req) {
 
     const { userId, plantId, size, color, qty } = body;
 
-    // Find plant
+    if (!plantId || !size || !qty || qty < 1) {
+      return NextResponse.json({ message: "Invalid input" }, { status: 400 });
+    }
+
+    // 2. No enum check — someone could send size: "XXXL"
+    const VALID_SIZES = ["SMALL", "MEDIUM", "LARGE"];
+    if (!VALID_SIZES.includes(size)) {
+      return NextResponse.json({ message: "Invalid size" }, { status: 400 });
+    }
+
     const plant = await Plant.findById(plantId);
 
     if (!plant) {
       return NextResponse.json({ message: "Plant not found" }, { status: 404 });
     }
 
+    const selectedVariant = plant.variants.find(
+      (variant) => variant.size === size,
+    );
+      if (!selectedVariant) { 
+        return NextResponse.json({ message: "Selected variant not available" }, { status: 400 });
+      } 
+      if(selectedVariant.stock < qty){
+        return NextResponse.json({ message: "Insufficient stock" }, { status: 400 });
+      }
     // Find or create cart
     let cart = await Cart.findOne({
       user: userId,
@@ -48,7 +66,7 @@ export async function POST(req) {
         plant: plant._id,
 
         plantSnapshot: {
-          plantName: plant.name,
+          plantName: plant.plantName,
           image: plant.images[0],
         },
 
@@ -57,13 +75,10 @@ export async function POST(req) {
 
         quantity: qty,
 
-        originalPrice: plant.originalPrice,
+        originalPrice: selectedVariant.originalPrice,
+        discountedPrice: selectedVariant.discountedPrice,
 
-        discountedPrice: plant.discountedPrice,
-
-        shipping: 
-          SHIPPING_DIMENSIONS[size]
-        
+        shipping: SHIPPING_DIMENSIONS[size],
       });
     }
 
