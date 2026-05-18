@@ -25,8 +25,8 @@ export default function AddPlantPage() {
       size: "SMALL",
       originalPrice: "",
       discountedPrice: "",
-      stock: 0
-    }
+      stock: 0,
+    },
   ]);
 
   // ✅ NEW: Colors
@@ -56,7 +56,7 @@ export default function AddPlantPage() {
   const addVariant = () => {
     setVariants([
       ...variants,
-      { size: "SMALL", originalPrice: "", discountedPrice: "", stock: 0 }
+      { size: "SMALL", originalPrice: "", discountedPrice: "", stock: 0 },
     ]);
   };
 
@@ -67,7 +67,7 @@ export default function AddPlantPage() {
   // ---------------- COLORS ----------------
   const toggleColor = (color) => {
     if (availableColors.includes(color)) {
-      setAvailableColors(availableColors.filter(c => c !== color));
+      setAvailableColors(availableColors.filter((c) => c !== color));
     } else {
       setAvailableColors([...availableColors, color]);
     }
@@ -109,7 +109,7 @@ export default function AddPlantPage() {
         });
 
         setVariants([
-          { size: "SMALL", originalPrice: "", discountedPrice: "", stock: 0 }
+          { size: "SMALL", originalPrice: "", discountedPrice: "", stock: 0 },
         ]);
 
         setAvailableColors([]);
@@ -118,7 +118,6 @@ export default function AddPlantPage() {
       } else {
         toast.error(result.message || "Something went wrong");
       }
-
     } catch (err) {
       console.error(err);
       toast.error("Upload failed");
@@ -132,18 +131,18 @@ export default function AddPlantPage() {
   return (
     <div className="min-h-screen bg-[#051109] py-12 px-4 text-white">
       <div className="max-w-4xl mx-auto bg-[#0A1A0F] rounded-2xl p-8">
-
         <h1 className="text-3xl font-bold text-center mb-8">Add New Plant</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-
           {/* BASIC */}
           <input
             type="text"
             placeholder="Plant Name"
             required
             value={formData.plantName}
-            onChange={(e) => setFormData({ ...formData, plantName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, plantName: e.target.value })
+            }
             className="w-full p-3 bg-[#1A2E21]"
           />
 
@@ -151,17 +150,30 @@ export default function AddPlantPage() {
             placeholder="Description"
             required
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
             className="w-full p-3 bg-[#1A2E21]"
           />
 
           {/* CATEGORY */}
           <select
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
             className="w-full p-3 bg-[#1A2E21]"
           >
-            {["FRUITS","INDOOR","OUTDOOR","AIR_PURIFIER","DECORATIVE","BEST_SELLING","SUMMER_SPECIAL","POPULAR"].map(c => (
+            {[
+              "FRUITS",
+              "INDOOR",
+              "OUTDOOR",
+              "AIR_PURIFIER",
+              "DECORATIVE",
+              "BEST_SELLING",
+              "SUMMER_SPECIAL",
+              "POPULAR",
+            ].map((c) => (
               <option key={c}>{c}</option>
             ))}
           </select>
@@ -169,7 +181,9 @@ export default function AddPlantPage() {
           {/* LIGHT */}
           <select
             value={formData.lightRequirements}
-            onChange={(e) => setFormData({ ...formData, lightRequirements: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, lightRequirements: e.target.value })
+            }
             className="w-full p-3 bg-[#1A2E21]"
           >
             <option value="FULL_SHADE">Full Shade</option>
@@ -183,14 +197,18 @@ export default function AddPlantPage() {
             type="text"
             placeholder="Watering schedule"
             value={formData.wateringRequirements}
-            onChange={(e) => setFormData({ ...formData, wateringRequirements: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, wateringRequirements: e.target.value })
+            }
             className="w-full p-3 bg-[#1A2E21]"
           />
 
           {/* DIFFICULTY */}
           <select
             value={formData.difficulty}
-            onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, difficulty: e.target.value })
+            }
             className="w-full p-3 bg-[#1A2E21]"
           >
             <option value="EASY">Easy</option>
@@ -203,8 +221,11 @@ export default function AddPlantPage() {
             <input
               type="checkbox"
               checked={formData.petFriendly}
-              onChange={(e) => setFormData({ ...formData, petFriendly: e.target.checked })}
-            /> Pet Friendly
+              onChange={(e) =>
+                setFormData({ ...formData, petFriendly: e.target.checked })
+              }
+            />{" "}
+            Pet Friendly
           </label>
 
           {/* 🔥 VARIANTS */}
@@ -212,50 +233,82 @@ export default function AddPlantPage() {
             <h2 className="font-bold mb-2">Variants</h2>
 
             {variants.map((v, i) => (
-              <div key={i} className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
-
-                <select value={v.size}
-                  onChange={(e) => handleVariantChange(i, "size", e.target.value)}>
+              <div
+                key={i}
+                className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2"
+              >
+                <select
+                  value={v.size}
+                  onChange={(e) =>
+                    handleVariantChange(i, "size", e.target.value)
+                  }
+                >
                   <option value="SMALL">SMALL</option>
                   <option value="MEDIUM">MEDIUM</option>
                   <option value="LARGE">LARGE</option>
                 </select>
 
-                <input type="number" placeholder="Original"
+                <input
+                  type="number"
+                  placeholder="Original"
                   value={v.originalPrice}
-                  onChange={(e) => handleVariantChange(i, "originalPrice", e.target.value)} />
+                  onChange={(e) =>
+                    handleVariantChange(i, "originalPrice", e.target.value)
+                  }
+                />
 
-                <input type="number" placeholder="Discounted"
+                <input
+                  type="number"
+                  placeholder="Discounted"
                   value={v.discountedPrice}
-                  onChange={(e) => handleVariantChange(i, "discountedPrice", e.target.value)} />
+                  onChange={(e) =>
+                    handleVariantChange(i, "discountedPrice", e.target.value)
+                  }
+                />
 
-                <input type="number" placeholder="Stock"
+                <input
+                  type="number"
+                  placeholder="Stock"
                   value={v.stock}
-                  onChange={(e) => handleVariantChange(i, "stock", e.target.value)} />
+                  onChange={(e) =>
+                    handleVariantChange(i, "stock", e.target.value)
+                  }
+                />
 
-                <button type="button" onClick={() => removeVariant(i)}>Remove</button>
+                <button type="button" onClick={() => removeVariant(i)}>
+                  Remove
+                </button>
               </div>
             ))}
 
-            <button type="button" onClick={addVariant}>+ Add Variant</button>
+            <button type="button" onClick={addVariant}>
+              + Add Variant
+            </button>
           </div>
 
           {/* 🔥 COLORS */}
           <div>
             <h2 className="font-bold mb-2">Colors</h2>
-            {["WHITE","BLACK","BROWN"].map(color => (
+            {["WHITE", "BLACK", "BROWN"].map((color) => (
               <label key={color} className="mr-4">
                 <input
                   type="checkbox"
                   checked={availableColors.includes(color)}
                   onChange={() => toggleColor(color)}
-                /> {color}
+                />{" "}
+                {color}
               </label>
             ))}
           </div>
 
           {/* IMAGES */}
-          <input type="file" multiple onChange={handleImageChange} name="images" className="border-2 p-2 rounded-2xl"/>
+          <input
+            type="file"
+            multiple
+            onChange={handleImageChange}
+            name="images"
+            className="w-full overflow-hidden rounded-2xl border-2 border-gray-300 bg-[#1A2E21] p-2 text-sm text-white file:mr-4 file:rounded-xl file:border-0 file:bg-green-400 file:px-4 file:py-2 file:font-semibold file:text-black hover:file:bg-green-500"
+          />
 
           <div className="flex gap-2 flex-wrap">
             {previews.map((url, i) => (
@@ -270,7 +323,6 @@ export default function AddPlantPage() {
           >
             {loading ? "Adding..." : "Add Plant"}
           </button>
-
         </form>
       </div>
     </div>

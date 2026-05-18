@@ -75,7 +75,7 @@ export default function CartPage() {
             ))}
 
             {/* COUPON */}
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            {/* <div className="rounded-3xl bg-white p-6 shadow-sm">
 
               <h2 className="text-xl font-semibold text-gray-800">
                 Apply Coupon
@@ -93,7 +93,7 @@ export default function CartPage() {
                   Apply
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* RIGHT SIDE */}
