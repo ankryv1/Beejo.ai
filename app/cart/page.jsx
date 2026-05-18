@@ -9,13 +9,13 @@ export default function CartPage() {
   const cartItems = cart;
    
 
-  const subtotal = cartItems.reduce(
+  const subtotal = cartItems?.reduce(
     (acc, item) =>
       acc + item.discountedPrice * item.quantity,
     0
   );
 
-  const originalSubtotal = cartItems.reduce(
+  const originalSubtotal = cartItems?.reduce(
     (acc, item) =>
       acc + item.originalPrice * item.quantity,
     0
