@@ -10,6 +10,8 @@ const ProductCard = ({ product }) => {
   if (!product) return null;
   const {user} = useAuth();
   const defaultVariant = product.variants?.[0];
+  console.log(product);
+  console.log(defaultVariant);
 
   const LetsAddToCart = async ({ plantId, size, color, qty }) => {
     try {
