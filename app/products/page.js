@@ -1,22 +1,37 @@
 export const dynamic = "force-dynamic";
-import ProductGrid from "@/components/products/ProductGrid";
+
 import React from "react";
-  
-const page = async () => {
-  const res = await fetch(
-    `/api/plants/getAll`,
-    { method: "GET", credentials: "include" },
-  );
-  const data = await res.json();
+
+import ProductGrid from "@/components/products/ProductGrid";
+
+import connectDB from "@/lib/mongodb";
+import plantModel from "@/models/plant.model";
+
+const Page = async ({ searchParams }) => {
+  await connectDB();
+
+  const category = searchParams.category;
+
+  const query = {};
+
+  if (category) {
+    query.category = category;
+  }
+
+  const products = await plantModel.find(query);
+
+  const serializedProducts =
+    JSON.parse(
+      JSON.stringify(products)
+    );
 
   return (
-    <div className="min-h-screen bg-white ">
-      <div className=" max-w-7xl mx-auto px-6 py-8">
-        <ProductGrid products={data.plants} />
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <ProductGrid products={serializedProducts} />
       </div>
     </div>
   );
 };
 
-export default page;
-
+export default Page;
