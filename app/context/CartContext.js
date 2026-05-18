@@ -26,7 +26,7 @@ export const CartProvider = ({
       setLoading(true);
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/cart/get`
+        `/api/cart/get`
       );
 
       const data = await res.json();

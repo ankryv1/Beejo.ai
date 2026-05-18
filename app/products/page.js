@@ -4,7 +4,7 @@ import React from "react";
   
 const page = async () => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/plants/getAll`,
+    `/api/plants/getAll`,
     { method: "GET", credentials: "include" },
   );
   const data = await res.json();

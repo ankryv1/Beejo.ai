@@ -5,7 +5,7 @@ import ProductCategories from '@/components/ProductCategories'
 import React from 'react'
 
 async function bestSellorsProducts() {
-  const products = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/plants/getAll?category=BEST_SELLING`, {next: {revalidate: 3600}});
+  const products = await fetch(`/api/plants/getAll?category=BEST_SELLING`, {next: {revalidate: 3600}});
   return products;
 }   
 

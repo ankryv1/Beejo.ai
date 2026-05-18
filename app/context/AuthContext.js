@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   const loginUser = async (email, password)=>{
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,{
+    const res = await fetch(`/api/auth/login`,{
       method:"POST",
       headers:{ "Content-Type": "application/json" },
       credentials: "include",
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       try {
         
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
+        const res = await fetch(`/api/auth/me`, {
           credentials: "include", // CRITICAL for HttpOnly Cookies
         });
         
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
 
   const register = async (email, password, name)=>{
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,{
+    const res = await fetch(`/api/auth/register`,{
       method: "POST",
       credentials:"include",
       headers: {"Content-Type": "application/json"},
@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
+    const res = await fetch(`/api/auth/logout`, { method: "POST", credentials: "include" });
     const data = await res.json();
     if(data.success){
       toast.success(data.message);
