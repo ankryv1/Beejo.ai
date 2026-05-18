@@ -57,7 +57,7 @@ export default function CartPage() {
             </p>
 
             <h2 className="text-2xl font-bold text-green-700">
-              {cartItems.length}
+              {cartItems?.length}
             </h2>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function CartPage() {
           {/* LEFT SIDE */}
           <div className="space-y-5">
 
-            {cartItems.map((item) => (
+            {cartItems?.map((item) => (
               <CartItem
                 key={item._id}
                 item={item}
