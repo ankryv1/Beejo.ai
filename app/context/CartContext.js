@@ -1,28 +1,75 @@
-"use client"
-import React, { createContext, useContext, useState } from 'react'
+"use client";
 
- const CartContext = createContext();
-export const CartProvider = ({children}) => {
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-   
-    const [cart, setCart] = useState([]);
+const CartContext = createContext();
 
-    const fetchCart = async ()=>{
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/add`);
-       const data = await res.json();
-       setCart(data);
-      
+export const CartProvider = ({
+  children,
+}) => {
+
+  const [cart, setCart] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  // FETCH CART
+  const fetchCart = async () => {
+    try {
+
+      setLoading(true);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/cart/get`
+      );
+
+      const data = await res.json();
+
+      setCart(data.cart);
+
+    } catch (error) {
+
+      console.log(error);
+
+    } finally {
+
+      setLoading(false);
     }
+  };
 
-    const cartCount = cart.length;
+  // AUTO FETCH ON LOAD
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  // TOTAL ITEMS COUNT
+  const cartCount =
+    cart?.items?.reduce(
+      (acc, item) =>
+        acc + item.quantity,
+      0
+    ) || 0;
 
   return (
-    <div>
-        <CartContext.Provider value={{cart, cartCount, fetchCart}} >
-          {children}
-        </CartContext.Provider >
-    </div>
-  )
-}
+    <CartContext.Provider
+      value={{
+        cart,
+        setCart,
+        fetchCart,
+        cartCount,
+        loading,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
+};
 
-export const useCart = ()=> useContext(CartContext);
+export const useCart = () =>
+  useContext(CartContext);

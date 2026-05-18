@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({email, password})
     });
      const data =await res.json();
-     if(data.success == true)
+     if(data.success === true)
       toast.success(data.message);
     if(res.ok){
      
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       router.push("/")
     } else{
-      toast.error(data.message);
+      toast.error("Authentication Failed");
       throw new Error(data.message || "Signup failed")
     }
   }

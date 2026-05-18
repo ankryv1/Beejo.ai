@@ -5,14 +5,20 @@ import connectDB from "@/lib/mongodb";
 import Cart from "@/models/cart.model";
 import Plant from "@/models/plant.model";
 import { SHIPPING_DIMENSIONS } from "@/utils/shippingDimentions";
+import { getUserFromToken } from "@/lib/getUserFromToken";
 
 export async function POST(req) {
-  await connectDB();
+  
 
   try {
+    await connectDB();
+    const userId = await getUserFromToken();
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized",success: false }, { status: 401 });
+    }
     const body = await req.json();
 
-    const { userId, plantId, size, color, qty } = body;
+    const { plantId, size, color, qty } = body;
 
     if (!plantId || !size || !qty || qty < 1) {
       return NextResponse.json({ message: "Invalid input" }, { status: 400 });
@@ -60,8 +66,27 @@ export async function POST(req) {
     );
 
     if (existingPlant) {
-      existingPlant.quantity += qty;
-    } else {
+
+  const totalQty =
+    existingPlant.quantity + qty;
+
+  if (
+    totalQty >
+    selectedVariant.stock
+  ) {
+    return NextResponse.json(
+      {
+        message:
+          "Cannot add more than available stock",
+      },
+      { status: 400 }
+    );
+  }
+
+  existingPlant.quantity = totalQty;
+
+}
+     else {
       cart.items.push({
         plant: plant._id,
 
@@ -87,6 +112,7 @@ export async function POST(req) {
     return NextResponse.json(
       {
         message: "Plant added to cart successfully",
+        success: true,
         cart,
       },
       { status: 200 },

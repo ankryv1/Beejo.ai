@@ -1,48 +1,13 @@
 "use client";
 
 import CartItem from "@/components/cart/CartItem";
+import { useCart } from "../context/CartContext";
 
 export default function CartPage() {
 
-  const cartItems = [
-    {
-      _id: "1",
-
-      plantName: "Snake Plant",
-
-      image:
-        "https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=1200&auto=format&fit=crop",
-
-      size: "MEDIUM",
-
-      color: "WHITE",
-
-      quantity: 2,
-
-      originalPrice: 799,
-
-      discountedPrice: 599,
-    },
-
-    {
-      _id: "2",
-
-      plantName: "Peace Lily",
-
-      image:
-        "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1200&auto=format&fit=crop",
-
-      size: "LARGE",
-
-      color: "BLACK",
-
-      quantity: 1,
-
-      originalPrice: 1299,
-
-      discountedPrice: 999,
-    },
-  ];
+  const { cart } = useCart();
+  const cartItems = cart;
+   
 
   const subtotal = cartItems.reduce(
     (acc, item) =>

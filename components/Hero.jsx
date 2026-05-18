@@ -49,7 +49,7 @@ export default function Hero() {
 
           
           <p className="text-white/80 text-lg lg:text-2xl max-w-2xl mx-auto leading-relaxed font-light drop-shadow">
-            Bijjo delivers hand-picked, premium indoor plants that don't just
+            PlantX delivers hand-picked, premium indoor plants that don't just
             look good—they make you feel better. Guaranteed fresh from our
             nursery.
           </p>
