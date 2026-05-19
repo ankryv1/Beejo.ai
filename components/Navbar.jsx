@@ -20,11 +20,17 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAccountOpen, setIsAccountOpen] = useState(false);
-  const { cartCount, fetchCart } = useCart();
+  const { cartCount } = useCart();
 
   const { isLoggedIn, logout, user, isAdmin } = useAuth();
 
   const router = useRouter();
+
+  const redirectToCartPage = async()=>{
+    router.push("/cart");
+  }
+
+
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -109,18 +115,16 @@ export default function Navbar() {
           {isLoggedIn && (
             <button
               className="relative flex items-center gap-2 bg-[#1A2E21] border 
-                               border-white/10 px-4 py-2 rounded-full hover:bg-[#253f2d] transition-all"
+                               border-white/10 px-4 py-2 rounded-full hover:bg-[#253f2d] transition-all" onClick={redirectToCartPage}
             >
               <ShoppingCart size={18} />
               <span className="hidden sm:inline text-sm font-medium">Cart</span>
-              {cartCount > 0 && (
-                <span
-                  className="bg-[#4ADE80] text-[#051109] text-[10px] font-bold w-5 h-5 
-                               rounded-full flex items-center justify-center absolute -top-1 -right-1"
-                >
-                  {cartCount}
-                </span>
-              )}
+              <span
+                className="bg-[#4ADE80] text-[#051109] text-[10px] font-bold w-5 h-5 
+             rounded-full flex items-center justify-center absolute -top-1 -right-1"
+              >
+                {cartCount}
+              </span>
             </button>
           )}
 
@@ -209,7 +213,7 @@ export default function Navbar() {
           )}
           {isLoggedIn && isAdmin ? (
             <Link href="/products/admin_add_product">
-              <div  className="p-2 px-4 font-bold bg-[#4ADE80] text-[#051109] rounded-lg hover:bg-[#22c55e] cursor-pointer">
+              <div className="p-2 px-4 font-bold bg-[#4ADE80] text-[#051109] rounded-lg hover:bg-[#22c55e] cursor-pointer">
                 Add +
               </div>
             </Link>

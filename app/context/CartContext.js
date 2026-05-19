@@ -28,10 +28,9 @@ export const CartProvider = ({
       const res = await fetch(
         `/api/cart/get`
       );
-
       const data = await res.json();
-
-      setCart(data.cart);
+      console.log(data.cart[0])
+      setCart(data.cart[0]);
 
     } catch (error) {
 

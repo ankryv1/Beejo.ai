@@ -4,14 +4,14 @@ import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 import toast from "react-hot-toast";
+import { useCart } from "@/app/context/CartContext";
 
 const ProductCard = ({ product }) => {
   // Defensive check to prevent crashes if product data is missing
   if (!product) return null;
   const {user} = useAuth();
+  const { fetchCart, loading } = useCart();
   const defaultVariant = product.variants?.[0];
-  console.log(product);
-  console.log(defaultVariant);
 
   const LetsAddToCart = async ({ plantId, size, color, qty }) => {
     try {
@@ -36,6 +36,7 @@ const ProductCard = ({ product }) => {
 
 if (response.ok) {
   toast.success(data.message);
+  await fetchCart();
 } else {
   toast.error(data.message);
 }
@@ -59,12 +60,16 @@ if (response.ok) {
 
           {/* Floating Add to Cart Button */}
           <div className="absolute inset-0 flex items-end justify-center p-6 translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-            <button
-              className="w-full bg-[#1A2E21] text-white py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-[#2A4D35] transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-
-            
+            {loading ? (
+              <div className="w-full bg-[#1A2E21] text-white py-3 rounded-2xl font-bold flex items-center justify-center gap-2">
+                Adding...
+              </div>
+            ) : (
+              <button
+                className="w-full bg-[#1A2E21] text-white py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-[#2A4D35] transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();  
 
                 if (!defaultVariant) return;
 
@@ -81,7 +86,7 @@ if (response.ok) {
             >
               <ShoppingCart size={18} />
               Add to Cart
-            </button>
+            </button>)}
           </div>
 
           {/* Out of Stock Badge */}

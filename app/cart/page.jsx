@@ -6,7 +6,7 @@ import { useCart } from "../context/CartContext";
 export default function CartPage() {
 
   const { cart } = useCart();
-  const cartItems = cart;
+  const cartItems = cart?.items || [];
    
 
   const subtotal = cartItems?.reduce(

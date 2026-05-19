@@ -54,12 +54,12 @@ const cartItemSchema = new mongoose.Schema({
 
     length: {
       type: Number, // cm
-      default: 10
+      default: 15
     },
 
     breadth: {
       type: Number,
-      default: 10
+      default: 15
     },
 
     height: {
@@ -85,5 +85,7 @@ const cartSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export default mongoose.models.carts ||
-mongoose.model("carts", cartSchema);
+const Cart = mongoose.models.Cart ||
+  mongoose.model("Cart", cartSchema);
+
+export default Cart;

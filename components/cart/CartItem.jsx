@@ -10,7 +10,7 @@ export default function CartItem({ item }) {
         <div className="h-56 sm:h-64 md:h-52 md:w-56 lg:h-auto lg:w-72">
 
           <img
-            src={item.image}
+            src={item.plantSnapshot.image}
             alt={item.plantName}
             className="h-full w-full object-cover"
           />
