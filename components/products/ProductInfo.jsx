@@ -19,9 +19,8 @@ import {
   MapPin,
 } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────
+import { useCart } from "@/app/context/CartContext";
+import { useAuth } from "@/app/context/AuthContext";
 
 function StarRow({
   rating = 4.3,
@@ -64,6 +63,20 @@ function StarRow({
     </div>
   );
 }
+
+const letsAddToCart = async () => {
+  await fetch("/api/cart/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      productId: plant.id,
+      variantId: selectedVariant.id,
+      quantity: qty,
+    }),
+  });
+};
 
 function TrustBadge({
   icon: Icon,
@@ -628,7 +641,7 @@ export default function ProductInfo({
         </div>
 
         <button
-          disabled={isOutOfStock}
+          disabled={isOutOfStock} onClick={letsAddToCart}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-transform ${
             isOutOfStock
               ? "cursor-not-allowed bg-gray-400 text-white"
