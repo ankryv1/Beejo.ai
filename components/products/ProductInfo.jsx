@@ -21,6 +21,7 @@ import {
 
 import { useCart } from "@/app/context/CartContext";
 import { useAuth } from "@/app/context/AuthContext";
+import toast from "react-hot-toast";
 
 function StarRow({
   rating = 4.3,
@@ -64,19 +65,7 @@ function StarRow({
   );
 }
 
-const letsAddToCart = async () => {
-  await fetch("/api/cart/add", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      productId: plant.id,
-      variantId: selectedVariant.id,
-      quantity: qty,
-    }),
-  });
-};
+
 
 function TrustBadge({
   icon: Icon,
@@ -191,6 +180,30 @@ const TABS = [
 export default function ProductInfo({
   plant,
 }) {
+  const { fetchCart } = useCart();
+  const letsAddToCart = async () => {
+  const reps= await fetch("/api/cart/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      plantId: plant._id,
+      size: selectedSize,
+      color: selectedVariant.color,
+      qty:qty,
+    }),
+  });
+
+  if(reps.ok){
+    toast.success("Added to cart!");
+    await fetchCart();
+  }
+  else  {
+    const data = await reps.json();
+    toast.error(data.message );
+  }
+};
   const [qty, setQty] = useState(1);
 
   const [selectedSize, setSelectedSize] =
@@ -573,9 +586,7 @@ export default function ProductInfo({
                 qty <
                 selectedVariant?.stock
               ) {
-                setQty(
-                  qty + 1
-                );
+                setQty(qty + 1);
               }
             }}
             className="bg-gray-50 px-4 py-3 text-lg font-bold transition-colors hover:bg-gray-100"
@@ -585,7 +596,7 @@ export default function ProductInfo({
         </div>
 
         <button
-          disabled={isOutOfStock}
+          disabled={isOutOfStock} onClick={letsAddToCart}
           className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-4 font-bold transition-all shadow-lg shadow-green-900/10 ${
             isOutOfStock
               ? "cursor-not-allowed bg-gray-400 text-white"
