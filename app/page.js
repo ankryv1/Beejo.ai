@@ -8,6 +8,7 @@ import ProductCategories from "@/components/ProductCategories";
 
 import connectDB from "@/lib/mongodb";
 import Plant from "@/models/plant.model";
+import CategoriesSection from "@/components/home/CategoriesSection";
 
 async function bestSellorsProducts() {
 
@@ -37,6 +38,7 @@ const Page = async () => {
       />
 
       <ProductCategories />
+      <CategoriesSection />
     </div>
   );
 };

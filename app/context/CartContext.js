@@ -26,11 +26,12 @@ export const CartProvider = ({
       setLoading(true);
 
       const res = await fetch(
-        `/api/cart/get`
+        `/api/cart/get`,
+        { credentials: "include" }
       );
       const data = await res.json();
       console.log(data.cart[0])
-      setCart(data.cart[0]);
+      setCart(data.cart?.[0]);
 
     } catch (error) {
 

@@ -332,6 +332,7 @@ export default function AddPlantPage() {
                 "BEST_SELLING",
                 "SUMMER_SPECIAL",
                 "POPULAR",
+                "ARTIFICIAL"
               ].map((c) => (
                 <option
                   key={c}
