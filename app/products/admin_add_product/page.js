@@ -21,12 +21,21 @@ export default function AddPlantPage() {
       plantName: "",
       description: "",
       category: "INDOOR",
+
+      // REAL PLANT FIELDS
       lightRequirements:
         "PARTIAL_SUN",
       wateringRequirements: "",
       difficulty: "EASY",
       petFriendly: false,
+
+      // ARTIFICIAL FIELD
+      material: "PLASTIC",
     });
+
+  const isArtificial =
+    formData.category ===
+    "ARTIFICIAL";
 
   // VARIANTS
   const [variants, setVariants] =
@@ -194,12 +203,18 @@ export default function AddPlantPage() {
           plantName: "",
           description: "",
           category: "INDOOR",
+
           lightRequirements:
             "PARTIAL_SUN",
+
           wateringRequirements:
             "",
+
           difficulty: "EASY",
+
           petFriendly: false,
+
+          material: "PLASTIC",
         });
 
         setVariants([
@@ -332,7 +347,7 @@ export default function AddPlantPage() {
                 "BEST_SELLING",
                 "SUMMER_SPECIAL",
                 "POPULAR",
-                "ARTIFICIAL"
+                "ARTIFICIAL",
               ].map((c) => (
                 <option
                   key={c}
@@ -344,119 +359,159 @@ export default function AddPlantPage() {
             </select>
           </div>
 
-          {/* LIGHT */}
-          <div>
-            <label className="mb-2 block text-sm font-semibold text-gray-300">
-              Light Requirements
-            </label>
+          {/* MATERIAL */}
+          {isArtificial && (
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-gray-300">
+                Material
+              </label>
 
-            <select
-              value={
-                formData.lightRequirements
-              }
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  lightRequirements:
-                    e.target.value,
-                })
-              }
-              className="w-full rounded-xl bg-[#1A2E21] p-3 outline-none"
-            >
-              <option value="FULL_SHADE">
-                Full Shade
-              </option>
+              <select
+                value={
+                  formData.material
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    material:
+                      e.target.value,
+                  })
+                }
+                className="w-full rounded-xl bg-[#1A2E21] p-3 outline-none"
+              >
+                <option value="PLASTIC">
+                  PLASTIC
+                </option>
 
-              <option value="PARTIAL_SHADE">
-                Partial Shade
-              </option>
+                <option value="SILK">
+                  SILK
+                </option>
 
-              <option value="PARTIAL_SUN">
-                Partial Sun
-              </option>
+                <option value="POLYESTER">
+                  POLYESTER
+                </option>
+              </select>
+            </div>
+          )}
 
-              <option value="FULL_SUN">
-                Full Sun
-              </option>
-            </select>
-          </div>
+          {/* REAL PLANT FIELDS */}
+          {!isArtificial && (
+            <>
+              {/* LIGHT */}
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-gray-300">
+                  Light Requirements
+                </label>
 
-          {/* WATERING */}
-          <div>
-            <label className="mb-2 block text-sm font-semibold text-gray-300">
-              Watering Schedule
-            </label>
+                <select
+                  value={
+                    formData.lightRequirements
+                  }
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      lightRequirements:
+                        e.target.value,
+                    })
+                  }
+                  className="w-full rounded-xl bg-[#1A2E21] p-3 outline-none"
+                >
+                  <option value="FULL_SHADE">
+                    Full Shade
+                  </option>
 
-            <input
-              type="text"
-              placeholder="Ex: Twice a week"
-              value={
-                formData.wateringRequirements
-              }
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  wateringRequirements:
-                    e.target.value,
-                })
-              }
-              className="w-full rounded-xl bg-[#1A2E21] p-3 outline-none"
-            />
-          </div>
+                  <option value="PARTIAL_SHADE">
+                    Partial Shade
+                  </option>
 
-          {/* DIFFICULTY */}
-          <div>
-            <label className="mb-2 block text-sm font-semibold text-gray-300">
-              Difficulty
-            </label>
+                  <option value="PARTIAL_SUN">
+                    Partial Sun
+                  </option>
 
-            <select
-              value={
-                formData.difficulty
-              }
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  difficulty:
-                    e.target.value,
-                })
-              }
-              className="w-full rounded-xl bg-[#1A2E21] p-3 outline-none"
-            >
-              <option value="EASY">
-                Easy
-              </option>
+                  <option value="FULL_SUN">
+                    Full Sun
+                  </option>
+                </select>
+              </div>
 
-              <option value="MEDIUM">
-                Medium
-              </option>
+              {/* WATERING */}
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-gray-300">
+                  Watering Schedule
+                </label>
 
-              <option value="HARD">
-                Hard
-              </option>
-            </select>
-          </div>
+                <input
+                  type="text"
+                  placeholder="Ex: Twice a week"
+                  value={
+                    formData.wateringRequirements
+                  }
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      wateringRequirements:
+                        e.target.value,
+                    })
+                  }
+                  className="w-full rounded-xl bg-[#1A2E21] p-3 outline-none"
+                />
+              </div>
 
-          {/* PET FRIENDLY */}
-          <label className="flex items-center gap-3 text-sm font-medium text-gray-300">
+              {/* DIFFICULTY */}
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-gray-300">
+                  Difficulty
+                </label>
 
-            <input
-              type="checkbox"
-              checked={
-                formData.petFriendly
-              }
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  petFriendly:
-                    e.target.checked,
-                })
-              }
-              className="h-5 w-5"
-            />
+                <select
+                  value={
+                    formData.difficulty
+                  }
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      difficulty:
+                        e.target.value,
+                    })
+                  }
+                  className="w-full rounded-xl bg-[#1A2E21] p-3 outline-none"
+                >
+                  <option value="EASY">
+                    Easy
+                  </option>
 
-            Pet Friendly
-          </label>
+                  <option value="MEDIUM">
+                    Medium
+                  </option>
+
+                  <option value="HARD">
+                    Hard
+                  </option>
+                </select>
+              </div>
+
+              {/* PET FRIENDLY */}
+              <label className="flex items-center gap-3 text-sm font-medium text-gray-300">
+
+                <input
+                  type="checkbox"
+                  checked={
+                    formData.petFriendly
+                  }
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      petFriendly:
+                        e.target.checked,
+                    })
+                  }
+                  className="h-5 w-5"
+                />
+
+                Pet Friendly
+              </label>
+            </>
+          )}
 
           {/* VARIANTS */}
           <div>
@@ -565,41 +620,43 @@ export default function AddPlantPage() {
           </div>
 
           {/* COLORS */}
-          <div>
+          {isArtificial && (
+            <div>
 
-            <h2 className="mb-4 text-xl font-bold">
-              Available Colors
-            </h2>
+              <h2 className="mb-4 text-xl font-bold">
+                Available Colors
+              </h2>
 
-            <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4">
 
-              {[
-                "WHITE",
-                "BLACK",
-                "BROWN",
-              ].map((color) => (
-                <label
-                  key={color}
-                  className="flex items-center gap-2 rounded-xl bg-[#132117] px-4 py-3"
-                >
+                {[
+                  "WHITE",
+                  "BLACK",
+                  "BROWN",
+                ].map((color) => (
+                  <label
+                    key={color}
+                    className="flex items-center gap-2 rounded-xl bg-[#132117] px-4 py-3"
+                  >
 
-                  <input
-                    type="checkbox"
-                    checked={availableColors.includes(
-                      color
-                    )}
-                    onChange={() =>
-                      toggleColor(
+                    <input
+                      type="checkbox"
+                      checked={availableColors.includes(
                         color
-                      )
-                    }
-                  />
+                      )}
+                      onChange={() =>
+                        toggleColor(
+                          color
+                        )
+                      }
+                    />
 
-                  {color}
-                </label>
-              ))}
+                    {color}
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* IMAGES */}
           <div>

@@ -2,7 +2,6 @@ import cloudinary from "@/lib/cloudinary";
 import connectDB from "@/lib/mongodb";
 import verifyUser from "@/lib/verifyUser";
 import plantModel from "@/models/plant.model";
-import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -19,24 +18,61 @@ export async function POST(req) {
     const petFriendly = formData.get("petFriendly");
     const category = formData.get("category");
     const images = formData.getAll("images");
-    const variants = JSON.parse(formData.get("variants"));
+   
+    const material = formData.get("material");
 
-    const formattedVariants = variants.map((v) => ({
+     
+ let variants = [];
+let availableColors = [];
+
+try {
+  variants = JSON.parse(formData.get("variants"));
+  availableColors = JSON.parse(formData.get("availableColors"));
+} catch (err) {
+  return NextResponse.json(
+    {
+      message: "Invalid JSON data",
+      success: false,
+    },
+    { status: 400 }
+  );
+}
+
+const formattedVariants = variants.map((v) => ({
       size: v.size,
       originalPrice: Number(v.originalPrice),
       discountedPrice: Number(v.discountedPrice),
       stock: Number(v.stock),
     }));
-    const availableColors = JSON.parse(formData.get("availableColors"));
+
+if (!plantName || !description || !category || images.length === 0) {
+  return NextResponse.json(
+    { message: "All required fields are mandatory", success: false },
+    { status: 400 }
+  );
+}
 
 
-
-    if (!plantName || !description || !category || images.length == 0) {
-      return NextResponse.json(
-        { message: "All fields are required", success: false },
-        { status: 400 },
-      );
-    }
+if (category !== "ARTIFICIAL") {
+  if (!lightRequirements || !wateringRequirements) {
+    return NextResponse.json(
+      {
+        message: "Light and watering requirements are required for real plants",
+        success: false
+      },
+      { status: 400 }
+    );
+  }
+}
+if (category === "ARTIFICIAL" && !material) {
+  return NextResponse.json(
+    {
+      message: "Material is required for artificial plants",
+      success: false
+    },
+    { status: 400 }
+  );
+}
 
     const uploadPromises = images.map(async (image) => {
       try {
@@ -67,6 +103,8 @@ export async function POST(req) {
 
     const uploadedUrls = (await Promise.all(uploadPromises)).filter(Boolean);
 
+
+
     const newPlant = await plantModel.create({
       plantName,
       description,
@@ -79,6 +117,7 @@ export async function POST(req) {
       availableColors,
       images: uploadedUrls,
       createdBy: user._id,
+      material
     });
     return NextResponse.json(
       { message: "Plant added successfully", plant: newPlant, success: true },

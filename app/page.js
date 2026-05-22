@@ -4,7 +4,7 @@ import React from "react";
 
 import Hero from "@/components/Hero";
 import BestSellers from "@/components/BestSellors";
-import ProductCategories from "@/components/ProductCategories";
+
 
 import connectDB from "@/lib/mongodb";
 import Plant from "@/models/plant.model";
@@ -37,7 +37,7 @@ const Page = async () => {
         products={products}
       />
 
-      <ProductCategories />
+     
       <CategoriesSection />
     </div>
   );

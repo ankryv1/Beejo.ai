@@ -16,11 +16,9 @@ import {
   Check,
   Tag,
   Leaf,
-  MapPin,
 } from "lucide-react";
 
 import { useCart } from "@/app/context/CartContext";
-import { useAuth } from "@/app/context/AuthContext";
 import toast from "react-hot-toast";
 
 function StarRow({
@@ -65,8 +63,6 @@ function StarRow({
   );
 }
 
-
-
 function TrustBadge({
   icon: Icon,
   title,
@@ -94,117 +90,29 @@ function TrustBadge({
   );
 }
 
-function PincodeChecker() {
-  const [pin, setPin] = useState("");
-  const [status, setStatus] =
-    useState(null);
+const getTabs = (isArtificial) => {
+  if (isArtificial) {
+    return [
+      "Description",
+      "Product Details",
+      "Reviews",
+    ];
+  }
 
-  const check = () => {
-    if (pin.length === 6) {
-      setStatus(
-        pin.startsWith("3")
-          ? "ok"
-          : "err"
-      );
-    }
-  };
-
-  return (
-    <div>
-      <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">
-        Check Delivery
-      </p>
-
-      <div className="flex gap-2">
-        <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 transition-colors focus-within:border-[#8A9A5B]">
-          <MapPin
-            size={14}
-            className="flex-shrink-0 text-gray-400"
-          />
-
-          <input
-            type="text"
-            maxLength={6}
-            value={pin}
-            onChange={(e) => {
-              setPin(
-                e.target.value.replace(
-                  /\D/g,
-                  ""
-                )
-              );
-
-              setStatus(null);
-            }}
-            placeholder="Enter pincode"
-            className="flex-1 bg-transparent text-sm text-[#1A2E21] outline-none"
-          />
-        </div>
-
-        <button
-          onClick={check}
-          className="rounded-xl bg-[#1A2E21] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#264230]"
-        >
-          Check
-        </button>
-      </div>
-
-      {status === "ok" && (
-        <p className="mt-1.5 flex items-center gap-1 text-xs text-green-600">
-          <Check size={12} />
-          Delivery available · Arrives
-          in 3–5 days
-        </p>
-      )}
-
-      {status === "err" && (
-        <p className="mt-1.5 text-xs text-red-500">
-          Sorry, we don't deliver to
-          this pincode yet.
-        </p>
-      )}
-    </div>
-  );
-}
-
-const TABS = [
-  "Description",
-  "Care Guide",
-  "Reviews",
-];
-
-// ─────────────────────────────────────────────────────────────
-// Main Component
-// ─────────────────────────────────────────────────────────────
+  return [
+    "Description",
+    "Care Guide",
+    "Reviews",
+  ];
+};
 
 export default function ProductInfo({
   plant,
 }) {
   const { fetchCart } = useCart();
-  const letsAddToCart = async () => {
-  const reps= await fetch("/api/cart/add", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      plantId: plant._id,
-      size: selectedSize,
-      color: selectedVariant.color,
-      qty:qty,
-    }),
-  });
 
-  if(reps.ok){
-    toast.success("Added to cart!");
-    await fetchCart();
-  }
-  else  {
-    const data = await reps.json();
-    toast.error(data.message );
-  }
-};
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] =
+    useState(1);
 
   const [selectedSize, setSelectedSize] =
     useState(
@@ -219,6 +127,13 @@ export default function ProductInfo({
 
   const [activeTab, setActiveTab] =
     useState("Description");
+
+  const isArtificial =
+    plant?.category ===
+    "ARTIFICIAL";
+
+  const tabs =
+    getTabs(isArtificial);
 
   const selectedVariant =
     plant?.variants?.find(
@@ -247,35 +162,72 @@ export default function ProductInfo({
   const potSizes =
     plant?.variants || [];
 
-  const handleShare = async () => {
-    const url =
-      window.location.href;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title:
-            "Check out this plant!",
-          url,
-        });
-
-        return;
-      }
-
-      await navigator.clipboard.writeText(
-        url
+  const letsAddToCart =
+    async () => {
+      const reps = await fetch(
+        "/api/cart/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            plantId: plant._id,
+            size: selectedSize,
+            qty,
+          }),
+        }
       );
 
-      setCopied(true);
+      if (reps.ok) {
+        toast.success(
+          "Added to cart!"
+        );
 
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+        await fetchCart();
 
-    } catch (err) {
-      console.error(err);
-    }
-  };
+      } else {
+
+        const data =
+          await reps.json();
+
+        toast.error(
+          data.message
+        );
+      }
+    };
+
+  const handleShare =
+    async () => {
+      const url =
+        window.location.href;
+
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title:
+              "Check out this product!",
+            url,
+          });
+
+          return;
+        }
+
+        await navigator.clipboard.writeText(
+          url
+        );
+
+        setCopied(true);
+
+        setTimeout(() => {
+          setCopied(false);
+        }, 2000);
+
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
   return (
     <div className="flex flex-col space-y-5">
@@ -401,7 +353,10 @@ export default function ProductInfo({
       <div>
 
         <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">
-          Pot Size —
+          {isArtificial
+            ? "Size —"
+            : "Pot Size —"}
+
           <span className="normal-case font-semibold text-[#1A2E21]">
             {" "}
             {selectedSize}
@@ -438,7 +393,7 @@ export default function ProductInfo({
 
         <div className="flex border-b border-gray-100">
 
-          {TABS.map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() =>
@@ -457,6 +412,7 @@ export default function ProductInfo({
 
         <div className="pt-4">
 
+          {/* DESCRIPTION */}
           {activeTab ===
             "Description" && (
             <p className="text-sm leading-relaxed text-gray-600">
@@ -466,74 +422,126 @@ export default function ProductInfo({
             </p>
           )}
 
-          {activeTab ===
-            "Care Guide" && (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {/* REAL PLANT CARE GUIDE */}
+          {!isArtificial &&
+            activeTab ===
+              "Care Guide" && (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
 
-              {[
-                {
-                  icon: Sun,
-                  label: "Light",
-                  value:
-                    plant?.lightRequirements?.replaceAll(
-                      "_",
-                      " "
-                    ),
-                },
+                {[
+                  {
+                    icon: Sun,
+                    label: "Light",
+                    value:
+                      plant?.lightRequirements?.replaceAll(
+                        "_",
+                        " "
+                      ),
+                  },
 
-                {
-                  icon: Droplets,
-                  label: "Water",
-                  value:
-                    plant?.wateringRequirements,
-                },
+                  {
+                    icon: Droplets,
+                    label: "Water",
+                    value:
+                      plant?.wateringRequirements,
+                  },
 
-                {
-                  icon: PawPrint,
-                  label:
-                    "Pet Safe",
+                  {
+                    icon: PawPrint,
+                    label:
+                      "Pet Safe",
 
-                  value:
-                    plant?.petFriendly
-                      ? "Non-toxic ✓"
-                      : "Keep away ⚠",
-                },
-              ].map(
-                ({
-                  icon: Icon,
-                  label,
-                  value,
-                }) => (
-                  <div
-                    key={label}
-                    className="flex items-center gap-3 rounded-xl border border-[#E8EDE2] bg-[#F9F9F7] p-3.5"
-                  >
-                    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-[#E8EDE2] bg-white">
-                      <Icon
-                        size={16}
-                        className="text-[#8A9A5B]"
-                      />
+                    value:
+                      plant?.petFriendly
+                        ? "Non-toxic ✓"
+                        : "Keep away ⚠",
+                  },
+                ].map(
+                  ({
+                    icon: Icon,
+                    label,
+                    value,
+                  }) => (
+                    <div
+                      key={label}
+                      className="flex items-center gap-3 rounded-xl border border-[#E8EDE2] bg-[#F9F9F7] p-3.5"
+                    >
+                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-[#E8EDE2] bg-white">
+                        <Icon
+                          size={16}
+                          className="text-[#8A9A5B]"
+                        />
+                      </div>
+
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                          {label}
+                        </p>
+
+                        <p className="text-sm font-semibold capitalize text-[#1A2E21]">
+                          {value}
+                        </p>
+                      </div>
                     </div>
+                  )
+                )}
+              </div>
+            )}
 
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                        {label}
-                      </p>
+          {/* ARTIFICIAL DETAILS */}
+          {isArtificial &&
+            activeTab ===
+              "Product Details" && (
 
-                      <p className="text-sm font-semibold capitalize text-[#1A2E21]">
-                        {value}
-                      </p>
-                    </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+
+                {/* MATERIAL */}
+                <div className="flex items-center gap-3 rounded-xl border border-[#E8EDE2] bg-[#F9F9F7] p-3.5">
+
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-[#E8EDE2] bg-white">
+                    <Package
+                      size={16}
+                      className="text-[#8A9A5B]"
+                    />
                   </div>
-                )
-              )}
-            </div>
-          )}
+
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                      Material
+                    </p>
+
+                    <p className="text-sm font-semibold capitalize text-[#1A2E21]">
+                      {plant?.material}
+                    </p>
+                  </div>
+                </div>
+
+                {/* COLORS */}
+                <div className="flex items-center gap-3 rounded-xl border border-[#E8EDE2] bg-[#F9F9F7] p-3.5">
+
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-[#E8EDE2] bg-white">
+                    <Tag
+                      size={16}
+                      className="text-[#8A9A5B]"
+                    />
+                  </div>
+
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                      Available Colors
+                    </p>
+
+                    <p className="text-sm font-semibold capitalize text-[#1A2E21]">
+                      {plant?.availableColors?.join(
+                        ", "
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
         </div>
       </div>
-
-      {/* PINCODE */}
-      {/* <PincodeChecker /> */}
 
       {/* TRUST */}
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
@@ -596,7 +604,8 @@ export default function ProductInfo({
         </div>
 
         <button
-          disabled={isOutOfStock} onClick={letsAddToCart}
+          disabled={isOutOfStock}
+          onClick={letsAddToCart}
           className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-4 font-bold transition-all shadow-lg shadow-green-900/10 ${
             isOutOfStock
               ? "cursor-not-allowed bg-gray-400 text-white"
@@ -610,72 +619,6 @@ export default function ProductInfo({
             : "Add to Cart"}
         </button>
       </div>
-
-      {/* MOBILE CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-sm md:hidden">
-
-        <div className="flex items-center overflow-hidden rounded-lg border border-gray-200">
-
-          <button
-            onClick={() =>
-              setQty(
-                Math.max(
-                  1,
-                  qty - 1
-                )
-              )
-            }
-            className="bg-gray-50 px-3 py-2.5 text-lg hover:bg-gray-100"
-          >
-            −
-          </button>
-
-          <span className="min-w-[28px] px-3 text-center text-sm font-bold">
-            {qty}
-          </span>
-
-          <button
-            onClick={() => {
-              if (
-                qty <
-                selectedVariant?.stock
-              ) {
-                setQty(
-                  qty + 1
-                );
-              }
-            }}
-            className="bg-gray-50 px-3 py-2.5 text-lg hover:bg-gray-100"
-          >
-            +
-          </button>
-        </div>
-
-        <button
-          disabled={isOutOfStock} onClick={letsAddToCart}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-bold transition-transform ${
-            isOutOfStock
-              ? "cursor-not-allowed bg-gray-400 text-white"
-              : "border-2 border-[#1A2E21] bg-white text-[#1A2E21] active:scale-95"
-          }`}
-        >
-          <ShoppingCart size={16} />
-
-          {isOutOfStock
-            ? "Out of Stock"
-            : "Add to Cart"}
-        </button>
-
-        <button className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#1A2E21] py-3 text-sm font-bold text-white transition-transform active:scale-95">
-          <Zap
-            size={16}
-            fill="currentColor"
-          />
-          Buy Now
-        </button>
-      </div>
-
-      <div className="h-20 md:hidden" />
     </div>
   );
 }
