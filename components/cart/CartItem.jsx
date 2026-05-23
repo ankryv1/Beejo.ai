@@ -1,5 +1,27 @@
+import toast from "react-hot-toast";
+import {useCart} from "@/app/context/CartContext";
 
 export default function CartItem({ item }) {
+  const {fetchCart} = useCart();
+           
+  const removeItemCartFn = async (id) => {
+
+
+    const data = await fetch("/api/cart/remove", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+    const res = await data.json();
+    if(res.success){
+      toast.success(res.message);
+     await fetchCart();
+    } else {
+      toast.error("Failed to remove item from cart");
+    }
+  }
 
   return (
     <div className="overflow-hidden rounded-3xl bg-white shadow-sm transition duration-300 hover:shadow-lg">
@@ -41,7 +63,7 @@ export default function CartItem({ item }) {
                 </div>
               </div>
 
-              <button className="w-fit text-sm font-medium text-red-500 transition hover:text-red-600">
+              <button className="w-fit text-sm font-medium text-red-500 transition hover:text-red-600 hover:cursor-pointer" onClick={() => removeItemCartFn(item._id)}>
                 Remove
               </button>
             </div>
