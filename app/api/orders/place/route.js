@@ -1,4 +1,4 @@
-import NextResponse from "next/response";
+import {NextResponse} from "next/response";
 import connectDB from "@/utils/connectDB";
 import Cart from "@/models/cart.model";
 import { getUserFromToken } from "@/utils/auth";
@@ -27,7 +27,7 @@ export const POST = async (request) => {
             state: form.state,
             pincode: form.pincode,
         },
-            
+
     });
 
     return NextResponse.json({ message: "Order placed successfully", order: orderItems }, { status: 201 });

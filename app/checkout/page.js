@@ -59,11 +59,7 @@ export default function CheckoutPage() {
 
   // HANDLE INPUT
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.value,
-    });
+    setForm({...form,[e.target.name]:e.target.value,});
 
     setErrors({
       ...errors,
@@ -192,17 +188,17 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#f5f7f2] via-[#eef4ec] to-[#f8faf7] py-12 px-4">
 
       {/* HEADER */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
 
         <p className="text-sm uppercase tracking-[0.3em] text-green-700 font-semibold">
           Secure Checkout
         </p>
 
-        <h1 className="mt-3 text-5xl font-serif text-[#17331F]">
+        <h1 className=" sm:mt-2 mt-3 text-5xl font-serif text-[#17331F]">
           Complete Your Order
         </h1>
 
-        <p className="mt-4 text-gray-500 max-w-2xl mx-auto">
+        <p className="mt-2 text-gray-500 max-w-2xl mx-auto">
           Healthy plants delivered
           fresh to your doorstep
           with secure checkout and
@@ -291,7 +287,10 @@ export default function CheckoutPage() {
                           {
                             addr.pincode
                           }
-                        </p>
+                           </p>
+                          <p className="text-sm text-gray-500">
+                            📞 {addr.phone}
+                          </p>
                       </div>
                     )
                   )}
@@ -367,7 +366,7 @@ export default function CheckoutPage() {
                 {/* STATE */}
                 <div>
 
-                  <label className="block text-sm font-medium text-[#17331F] mb-2">
+                  <label className="block text-sm font-medium text-[#09130c] mb-2">
                     State
                   </label>
 
@@ -565,7 +564,7 @@ function Field({
   return (
     <div>
 
-      <label className="block text-sm font-medium text-[#17331F] mb-2">
+      <label className="block text-sm font-medium text-[#0d1c11] mb-2">
         {label}
       </label>
 
@@ -607,7 +606,7 @@ function Row({
       className={`flex justify-between ${
         bold
           ? "font-bold text-lg text-[#17331F]"
-          : "text-gray-600"
+          : "text-gray-700"
       }`}
     >
       <span>{label}</span>
