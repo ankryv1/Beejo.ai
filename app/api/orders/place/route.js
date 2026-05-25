@@ -1,4 +1,4 @@
-import {NextResponse} from "next/response";
+import {NextResponse} from "next/server";
 import connectDB from "@/utils/connectDB";
 import Cart from "@/models/cart.model";
 import { getUserFromToken } from "@/utils/auth";
