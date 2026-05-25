@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
-import connectDB from "@/utils/connectDB";
+import connectDB from "@/lib/mongodb";
 import Cart from "@/models/cart.model";
-import { getUserFromToken } from "@/utils/auth";
+import { getUserFromToken } from "@/lib/getUserFromToken";
 
 export const POST = async (request) => {
     await connectDB();
