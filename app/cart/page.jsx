@@ -2,8 +2,10 @@
 
 import CartItem from "@/components/cart/CartItem";
 import { useCart } from "../context/CartContext";
+import {useRouter} from "next/navigation";
 
 export default function CartPage() {
+  const router = useRouter();
 
   const { cart } = useCart();
   const cartItems = cart?.items || [];
@@ -185,11 +187,11 @@ export default function CartPage() {
               {/* BUTTONS */}
               <div className="mt-8 space-y-4">
 
-                <button className="w-full rounded-2xl bg-green-700 py-4 text-lg font-semibold text-white transition hover:bg-green-800">
+                <button className="w-full rounded-2xl bg-green-700 py-4 text-lg font-semibold text-white transition hover:bg-green-800" onClick={() => router.push("/checkout")}>
                   Proceed to Checkout
                 </button>
 
-                <button className="w-full rounded-2xl border border-gray-300 py-4 text-lg font-semibold text-gray-700 transition hover:bg-gray-50">
+                <button className="w-full rounded-2xl border border-gray-300 py-4 text-lg font-semibold text-gray-700 transition hover:bg-gray-50" onClick={() => router.push("/products")}>
                   Continue Shopping
                 </button>
               </div>

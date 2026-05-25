@@ -1,81 +1,35 @@
-// import { NextResponse } from "next/server";
+import NextResponse from "next/response";
+import connectDB from "@/utils/connectDB";
+import Cart from "@/models/cart.model";
+import { getUserFromToken } from "@/utils/auth";
 
-// import dbConnect from "@/lib/dbConnect";
+export const POST = async (request) => {
+    await connectDB();
+    const userId = await getUserFromToken();
+    const cartItems = await Cart.find({ user: userId });
+    if (cartItems.length === 0) {
+        return NextResponse.json({ message: "Cart is empty" }, { status: 400 });
+    }
+    const orderItems = await Order.create({
+        user:userId,
+        orderItems:cartItems.map((item) => ({
+            plant: item.plant,
+            quantity: item.quantity,
+            price: item.discountedPrice,
+            size: item.size,
+            color: item.color,
+        })),
+        shippingAddress:{
+            fullName: form.fullName,
+            phone: form.phone,
+            address: form.address,
+            city: form.city,
+            state: form.state,
+            pincode: form.pincode,
+        },
+            
+    });
 
-// import cartModel from "@/models/cart.model";
-// import Order from "@/models/order.model";
+    return NextResponse.json({ message: "Order placed successfully", order: orderItems }, { status: 201 });
+}
 
-// import { calculateShipping } from "@/utils/calculateShipping";
-
-// export async function POST(req) {
-
-//   await dbConnect();
-
-//   try {
-
-//     const body = await req.json();
-
-//     const { userId } = body;
-
-//     const cart = await cartModel.findOne({
-//       user: userId
-//     });
-
-//     if (!cart || !cart.items.length) {
-//       return NextResponse.json(
-//         { message: "Cart is empty" },
-//         { status: 400 }
-//       );
-//     }
-
-//     // subtotal
-//     const subtotal = cart.items.reduce(
-//       (sum, item) =>
-//         sum + item.discountedPrice * item.quantity,
-//       0
-//     );
-
-//     // shipping
-//     const {
-//       shippingCharge,
-//       reason
-//     } = calculateShipping(cart.items);
-
-//     // final amount
-//     const finalAmount =
-//       subtotal + shippingCharge;
-
-//     // create order
-//     const order = await Order.create({
-//       user: userId,
-
-//       items: cart.items,
-
-//       pricing: {
-//         subtotal,
-//         shippingCharge,
-//         finalAmount
-//       },
-
-//       shipping: {
-//         shippingReason: reason,
-//         shipmentStatus: "PENDING"
-//       }
-//     });
-
-//     return NextResponse.json({
-//       success: true,
-//       order
-//     });
-
-//   } catch (error) {
-
-//     return NextResponse.json(
-//       {
-//         success: false,
-//         message: error.message
-//       },
-//       { status: 500 }
-//     );
-//   }
-// }
