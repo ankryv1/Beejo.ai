@@ -67,7 +67,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="shrink-0">
           <div className="text-[#c7eecb] text-2xl font-bold font-serif tracking-normal">
-            plantx
+            🌿PlantX
           </div>
         </Link>
 

@@ -10,7 +10,7 @@ export const POST = async (request) => {
     if (cartItems.length === 0) {
         return NextResponse.json({ message: "Cart is empty" }, { status: 400 });
     }
-    const orderItems = await Order.create({
+    const oItems = await Order.create({
         user:userId,
         orderItems:cartItems.map((item) => ({
             plant: item.plant,
@@ -20,12 +20,16 @@ export const POST = async (request) => {
             color: item.color,
         })),
         shippingAddress:{
-            fullName: form.fullName,
+            fullName: form.fullName,  
             phone: form.phone,
             address: form.address,
             city: form.city,
             state: form.state,
             pincode: form.pincode,
+        },
+        paymentResult:{
+            id: paymentResult.id,
+            status: paymentResult.status,
         },
 
     });
