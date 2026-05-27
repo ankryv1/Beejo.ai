@@ -96,8 +96,7 @@ export const POST = async (request) => {
         pincode: form.pincode,
       },
 
-      paymentResult: paymentResult
-        ? {
+      paymentResult: paymentResult? {
             id: paymentResult.id,
 
             status: paymentResult.status,

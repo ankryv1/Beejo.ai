@@ -3,26 +3,20 @@
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-
-
-const GST_RATE = 0.18;
+const GST_RATE = 0;
 const SHIPPING_CHARGE = 50;
 
 export default function CheckoutPage() {
   const { cart } = useCart();
+  const router = useRouter();
 
   const cartItems = cart?.items || [];
   console.log(cartItems);
 
   const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    pincode: "",
-  });
+    name: "",phone: "",address: "",city: "",state: "",pincode: "",});
 
   const [errors, setErrors] = useState({});
   const [savedAddresses, setSavedAddresses] = useState([]);
@@ -55,9 +49,10 @@ export default function CheckoutPage() {
   );
 
   const gst = subtotal * GST_RATE;
+  const shipping = subtotal > 500 ? 0 : SHIPPING_CHARGE;
 
   const total =
-    subtotal + gst + SHIPPING_CHARGE;
+    subtotal + gst + shipping;
 
   // HANDLE INPUT
   const handleChange = (e) => {
@@ -99,6 +94,27 @@ export default function CheckoutPage() {
       }
     );
 
+    const addressRes = await fetch('/api/address/add',{
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+      body: JSON.stringify({
+        form
+      })
+    })
+    const addressData = await addressRes.json();
+
+    if(addressData.success){
+      setSelectedAddress(addressData.address);
+      toast.success('Address saved');
+    }
+    else{
+      toast.error('Failed to save address');
+    }
+
     const order = await response.json();
 
     // RAZORPAY OPTIONS
@@ -116,10 +132,37 @@ export default function CheckoutPage() {
       description: "Plant Purchase",
 
       order_id: order.id,
+      modal: {
+     ondismiss: function () {
+     toast.error(
+      "Payment cancelled"
+     );
+    },
+    },
 
-      handler: async function (
-        response
-      ) {
+      handler: async function (response) {
+
+        const isVerified = await fetch("/api/payment/verify", {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            razorpay_order_id:response.razorpay_order_id,
+
+            razorpay_payment_id:response.razorpay_payment_id,
+            rozorpay_signature:response.razorpay_signature,
+          })
+          }
+        );
+        const isVerifiedData = await isVerified.json();
+
+        if (!isVerifiedData.success) {
+          toast.error("Payment verification failed");
+          return;
+        }
 
         // CREATE FINAL ORDER
         const orderRes = await fetch(
@@ -153,6 +196,7 @@ export default function CheckoutPage() {
           toast.success(
             "Payment successful"
           );
+          router.push("/orders");
 
         } else {
 
@@ -226,82 +270,6 @@ export default function CheckoutPage() {
   };
 
   // SUBMIT
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const newErrors = validate();
-
-    if (
-      Object.keys(newErrors)
-        .length > 0
-    ) {
-      setErrors(newErrors);
-      return;
-    }
-
-    try {
-      const addressRes =
-        await fetch(
-          "/api/address/add",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body: JSON.stringify({
-              fullName:
-                form.name,
-
-              phone:
-                form.phone,
-
-              address:
-                form.address,
-
-              city:
-                form.city,
-
-              state:
-                form.state,
-
-              pincode:
-                form.pincode,
-            }),
-          }
-        );
-
-      const addressData =
-        await addressRes.json();
-
-      if (
-        !addressData.success
-      ) {
-        toast.error(
-          "Failed to save address"
-        );
-
-        return;
-      }
-
-      toast.success(
-        "Address saved successfully"
-      );
-
-      // NEXT:
-      // CREATE ORDER API
-
-      console.log({ form,total, });
-    } catch (error) {
-      console.log(error);
-
-      toast.error(
-        "Something went wrong"
-      );
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f5f7f2] via-[#eef4ec] to-[#f8faf7] py-12 px-4">
@@ -621,7 +589,7 @@ export default function CheckoutPage() {
 
                 <Row
                   label="Shipping"
-                  value={`₹${SHIPPING_CHARGE}`}
+                  value={`₹${shipping?.toFixed(2)}`}
                 />
 
                 <hr />
@@ -636,7 +604,7 @@ export default function CheckoutPage() {
               </div>
 
               <button
-                type="submit" onClick={handlePayment}
+                type="submit" 
                 className="
                   mt-8 w-full rounded-2xl
                   bg-[#17331F]
