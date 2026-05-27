@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
 
+
+
 const GST_RATE = 0.18;
 const SHIPPING_CHARGE = 50;
 
@@ -66,6 +68,123 @@ export default function CheckoutPage() {
       [e.target.name]: "",
     });
   };
+
+
+  const handlePayment = async (e) => {
+  e.preventDefault();
+
+  const newErrors = validate();
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  try {
+
+    // CREATE RAZORPAY ORDER
+    const response = await fetch(
+      "/api/payment/create-order",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          amount: total,
+        }),
+      }
+    );
+
+    const order = await response.json();
+
+    // RAZORPAY OPTIONS
+    const options = {
+      key:
+        process.env
+          .NEXT_PUBLIC_RAZORPAY_KEY_ID,
+
+      amount: order.amount,
+
+      currency: order.currency,
+
+      name: "PlantX",
+
+      description: "Plant Purchase",
+
+      order_id: order.id,
+
+      handler: async function (
+        response
+      ) {
+
+        // CREATE FINAL ORDER
+        const orderRes = await fetch(
+          "/api/order/create",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              form,
+
+              paymentResult: {
+                id:
+                  response.razorpay_payment_id,
+
+                status: "PAID",
+              },
+            }),
+          }
+        );
+
+        const finalData =
+          await orderRes.json();
+
+        if (finalData.success) {
+
+          toast.success(
+            "Payment successful"
+          );
+
+        } else {
+
+          toast.error(
+            "Order creation failed"
+          );
+        }
+      },
+
+      prefill: {
+        name: form.name,
+
+        contact: form.phone,
+      },
+
+      theme: {
+        color: "#17331F",
+      },
+    };
+
+    const razorpay =
+      new window.Razorpay(options);
+
+    razorpay.open();
+
+  } catch (error) {
+
+    console.log(error);
+
+    toast.error("Payment failed");
+  }
+};
 
   // VALIDATION
   const validate = () => {
@@ -206,7 +325,8 @@ export default function CheckoutPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={handlePayment} className="max-w-7xl mx-auto">
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -516,7 +636,7 @@ export default function CheckoutPage() {
               </div>
 
               <button
-                type="submit"
+                type="submit" onClick={handlePayment}
                 className="
                   mt-8 w-full rounded-2xl
                   bg-[#17331F]
