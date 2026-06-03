@@ -8,7 +8,7 @@ export async function POST(request) {
         await resend.emails.send({
             from: "PlantX <onboarding@resend.dev>",
             replyTo : `${form.email}`,
-            to : "ankit.yadavdev01@gmail.com",
+            to : "officialplantx.store@gmail.com",
             subject : `PlantX Contact ${form.subject}`,
             html : `<h1>New Contact Us Message</h1>
                     <p><strong>Name:</strong> ${form.name}</p>

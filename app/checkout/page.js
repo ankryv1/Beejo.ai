@@ -376,7 +376,7 @@ const handlePayment = async (e) => {
 
         <p className="mt-2 text-gray-500 max-w-2xl mx-auto">
           Healthy plants delivered fresh to your doorstep with secure checkout
-          and fast shipping.
+          and fast shipping.Buy plants online with confidence and ease.
         </p>
       </div>
 
