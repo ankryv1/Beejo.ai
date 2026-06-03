@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 
 const tocLinks = [
   { id: 's1', label: '1. Acceptance of Terms' },
@@ -19,13 +17,12 @@ const tocLinks = [
 
 export default function TermsAndConditions() {
   return (
-    <>
+    <div className="bg-gray-50">
       <Head>
         <title>Terms & Conditions – PlantX</title>
         <meta name="description" content="Read PlantX Terms & Conditions governing the use of our website and purchase of products." />
       </Head>
 
-      <Navbar />
 
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#1a3a2a] to-[#2d5c3e] py-20 px-6 text-center">
@@ -51,7 +48,7 @@ export default function TermsAndConditions() {
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="bg-[#e8f4ee] border-l-4 border-[#2d5c3e] rounded-r-lg px-5 py-3.5 text-sm text-[#2d5c3e] mb-10">
-              📅 Last updated: January 1, 2024 &nbsp;|&nbsp; Effective from: January 1, 2024
+              📅 Last updated: June 1, 2026 &nbsp;|&nbsp; Effective from: June 1, 2026
             </div>
 
             <p className="text-gray-500 text-sm leading-relaxed mb-10">
@@ -61,7 +58,7 @@ export default function TermsAndConditions() {
 
             {/* S1 */}
             <section id="s1" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">1. Acceptance of Terms</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">1. Acceptance of Terms</h2>
               <p className="text-gray-500 text-sm leading-relaxed">
                 By visiting, browsing, or making a purchase on plantx.in, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions and our Privacy Policy. If you do not agree, please do not use our website or services.
               </p>
@@ -69,7 +66,7 @@ export default function TermsAndConditions() {
 
             {/* S2 */}
             <section id="s2" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">2. Eligibility</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">2. Eligibility</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">To use our services and make purchases on PlantX, you must:</p>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Be at least 18 years of age</li>
@@ -81,7 +78,7 @@ export default function TermsAndConditions() {
 
             {/* S3 */}
             <section id="s3" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">3. Account Registration</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">3. Account Registration</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">You may browse our website without registering. To place orders, you may be required to create an account. You agree to:</p>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Provide accurate and complete registration information</li>
@@ -94,7 +91,7 @@ export default function TermsAndConditions() {
 
             {/* S4 */}
             <section id="s4" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">4. Products & Pricing</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">4. Products & Pricing</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Product images are representative — slight variations in plant size, colour, or pot shade may occur naturally.</li>
                 <li>Prices are listed in Indian Rupees (INR) and are inclusive of applicable taxes unless stated otherwise.</li>
@@ -106,7 +103,7 @@ export default function TermsAndConditions() {
 
             {/* S5 */}
             <section id="s5" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">5. Orders & Payment</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">5. Orders & Payment</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>You are making an offer to purchase the selected product(s) at the listed price when you place an order.</li>
                 <li>An order confirmation email does not constitute acceptance — acceptance occurs upon dispatch.</li>
@@ -118,7 +115,7 @@ export default function TermsAndConditions() {
 
             {/* S6 */}
             <section id="s6" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">6. Shipping & Delivery</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">6. Shipping & Delivery</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>We deliver across India. Delivery timelines are 3–7 business days depending on your location.</li>
                 <li>Delivery timelines are estimates and may be affected by weather, strikes, or courier delays outside our control.</li>
@@ -130,7 +127,7 @@ export default function TermsAndConditions() {
 
             {/* S7 */}
             <section id="s7" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">7. Intellectual Property</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">7. Intellectual Property</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">
                 All content on the PlantX website — including logos, brand name, images, product descriptions, blog content, and design — is the exclusive intellectual property of PlantX India Pvt. Ltd. and is protected under Indian copyright and trademark laws.
               </p>
@@ -143,7 +140,7 @@ export default function TermsAndConditions() {
 
             {/* S8 */}
             <section id="s8" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">8. Prohibited Conduct</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">8. Prohibited Conduct</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">You agree not to:</p>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Use the website for any unlawful, fraudulent, or harmful purpose</li>
@@ -157,7 +154,7 @@ export default function TermsAndConditions() {
 
             {/* S9 */}
             <section id="s9" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">9. Limitation of Liability</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">9. Limitation of Liability</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">To the maximum extent permitted by law, PlantX India Pvt. Ltd. shall not be liable for:</p>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Indirect, incidental, or consequential damages arising from use of our products or website</li>
@@ -170,19 +167,19 @@ export default function TermsAndConditions() {
 
             {/* S10 */}
             <section id="s10" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">10. Governing Law & Dispute Resolution</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">10. Governing Law & Dispute Resolution</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">
                 These Terms shall be governed by and construed in accordance with the laws of India. Any disputes arising out of or relating to these Terms shall be subject to the exclusive jurisdiction of the courts of{' '}
                 <strong className="text-gray-800">Jaipur, Rajasthan</strong>.
               </p>
               <p className="text-gray-500 text-sm leading-relaxed">
-                In the event of a dispute, we encourage customers to first contact us at support@plantx.in to seek an amicable resolution before initiating legal proceedings.
+                In the event of a dispute, we encourage customers to first contact us at Officialplantx.store@gmail.com to seek an amicable resolution before initiating legal proceedings.
               </p>
             </section>
 
             {/* S11 */}
             <section id="s11" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">11. Changes to These Terms</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">11. Changes to These Terms</h2>
               <p className="text-gray-500 text-sm leading-relaxed">
                 We reserve the right to update or modify these Terms at any time. Changes will be posted on this page with an updated &quot;Last Updated&quot; date. Your continued use of the website after changes are posted constitutes your acceptance of the revised Terms.
               </p>
@@ -190,11 +187,11 @@ export default function TermsAndConditions() {
 
             {/* S12 */}
             <section id="s12" className="scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">12. Contact Us</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">12. Contact Us</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
-                <li><strong className="text-gray-700">Email:</strong> legal@plantx.in</li>
-                <li><strong className="text-gray-700">Phone:</strong> +91 98765 43210</li>
-                <li><strong className="text-gray-700">Address:</strong> 42, Green Valley Colony, Vaishali Nagar, Jaipur, Rajasthan – 302021</li>
+                <li><strong className="text-gray-700">Email:</strong> Officialplantx.store@gmail.com</li>
+                <li><strong className="text-gray-700">Phone:</strong> +91 7023829288</li>
+                <li><strong className="text-gray-700">Address:</strong>Ward No. 44,Near Rose Public School, Chomu, Jaipur, Rajasthan – 303702</li>
               </ul>
             </section>
 
@@ -202,7 +199,7 @@ export default function TermsAndConditions() {
         </div>
       </main>
 
-      <Footer />
-    </>
+      
+    </div>
   );
 }

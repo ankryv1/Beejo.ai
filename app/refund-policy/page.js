@@ -1,16 +1,14 @@
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 
 const doaSteps = [
   'Take clear photos or a short video of the plant in the original packaging immediately upon delivery.',
-  'Email us at support@plantx.in with Subject: "DOA Claim – [Your Order ID]"',
+  'Email us at Officialplantx.store@gmail.com with Subject: "DOA Claim – [Your Order ID]"',
   'Our team will review within 24 hours and confirm the replacement or refund.',
   'DOA claim must be raised within 48 hours of delivery — claims raised after this window may not be accepted.',
 ];
 
 const returnSteps = [
-  'Email support@plantx.in with Subject: "Return Request – [Your Order ID]"',
+  'Email Officialplantx.store@gmail.com with Subject: "Return Request – [Your Order ID]"',
   'Include: Your name, order ID, issue description, and clear photos/videos as evidence.',
   'Our team will review and respond within 24–48 business hours.',
   'If approved, we\'ll arrange a reverse pickup (at no cost to you).',
@@ -39,16 +37,15 @@ const tocLinks = [
 
 export default function RefundPolicy() {
   return (
-    <>
+    <div className="bg-gray-50">
       <Head>
         <title>Refund Policy – PlantX</title>
         <meta name="description" content="PlantX Refund and Return Policy – understand cancellations, DOA claims, refund timelines and more." />
       </Head>
 
-      <Navbar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#1a3a2a] to-[#2d5c3e] py-20 px-6 text-center">
+      <section className="bg-gradient-to-br from-[#1a3a2a] to-[#2d5c3e] py-20 px-6 text-center ">
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-white mb-3">Refund & Return Policy</h1>
         <p className="text-[#b8d9c4] text-base font-light">Our commitment to making every order right for you</p>
       </section>
@@ -71,7 +68,7 @@ export default function RefundPolicy() {
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="bg-[#e8f4ee] border-l-4 border-[#2d5c3e] rounded-r-lg px-5 py-3.5 text-sm text-[#2d5c3e] mb-10">
-              📅 Last updated: January 1, 2024 &nbsp;|&nbsp; Effective from: January 1, 2024
+              📅 Last updated: January 1, 2024 &nbsp;|&nbsp; Effective from: May 1, 2026
             </div>
 
             <p className="text-gray-500 text-sm leading-relaxed mb-10">
@@ -80,12 +77,12 @@ export default function RefundPolicy() {
 
             {/* Section 1 */}
             <section id="s1" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">1. Order Cancellation Policy</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">1. Order Cancellation Policy</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">
                 You may cancel your order within <strong className="text-gray-800">12 hours of placing it</strong>, provided the order has not yet been dispatched.
               </p>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2 mb-4">
-                <li>To cancel, contact us via WhatsApp (+91 98765 43210) or email (support@plantx.in) with your Order ID.</li>
+                <li>To cancel, contact us via WhatsApp (+91 7340065075) or email (Officialplantx.store@gmail.com) with your Order ID.</li>
                 <li>If the order has already been shipped, cancellation is not possible. Please initiate a return after delivery.</li>
                 <li>Prepaid orders cancelled within the window will receive a full refund within 5–7 business days.</li>
               </ul>
@@ -96,7 +93,7 @@ export default function RefundPolicy() {
 
             {/* Section 2 */}
             <section id="s2" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">2. Return Eligibility</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">2. Return Eligibility</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">We accept returns under the following circumstances:</p>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Plant arrived dead, severely damaged, or completely wilted (Dead on Arrival)</li>
@@ -110,7 +107,7 @@ export default function RefundPolicy() {
 
             {/* Section 3 */}
             <section id="s3" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">3. Non-Returnable Items</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">3. Non-Returnable Items</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Perishable plants showing natural wear after delivery (yellowing of 1–2 leaves is normal during transit)</li>
                 <li>Seeds, bulbs, and saplings once opened</li>
@@ -123,7 +120,7 @@ export default function RefundPolicy() {
 
             {/* Section 4 – DOA */}
             <section id="s4" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">4. Dead on Arrival (DOA) Policy</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">4. Dead on Arrival (DOA) Policy</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-4">If your plant arrives dead or in unacceptable condition, we will replace it or issue a full refund — no questions asked.</p>
               <div className="space-y-3">
                 {doaSteps.map((step, i) => (
@@ -137,7 +134,7 @@ export default function RefundPolicy() {
 
             {/* Section 5 – Return Steps */}
             <section id="s5" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">5. How to Initiate a Return / Refund</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">5. How to Initiate a Return / Refund</h2>
               <div className="space-y-3">
                 {returnSteps.map((step, i) => (
                   <div key={i} className="flex gap-4 items-start">
@@ -150,7 +147,7 @@ export default function RefundPolicy() {
 
             {/* Section 6 – Timeline Table */}
             <section id="s6" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">6. Refund Timeline</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">6. Refund Timeline</h2>
               <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
                 <table className="w-full text-sm">
                   <thead>
@@ -174,7 +171,7 @@ export default function RefundPolicy() {
 
             {/* Section 7 */}
             <section id="s7" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">7. Exchange Policy</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">7. Exchange Policy</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Contact us within 48 hours of delivery for an exchange request</li>
                 <li>The original item must be in its delivered condition</li>
@@ -185,7 +182,7 @@ export default function RefundPolicy() {
 
             {/* Section 8 */}
             <section id="s8" className="mb-12 scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">8. Items Damaged in Transit</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">8. Items Damaged in Transit</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
                 <li>Do not accept the package if visibly damaged at delivery — mark it as &quot;Refused – Damaged&quot; and inform us.</li>
                 <li>If damage is noticed after opening, report within 48 hours with photographic evidence.</li>
@@ -195,11 +192,11 @@ export default function RefundPolicy() {
 
             {/* Section 9 */}
             <section id="s9" className="scroll-mt-24">
-              <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">9. Contact Us for Refunds</h2>
+              <h2 className="font-serif text-xl text-black font-semibold mb-4 pb-3 border-b-2 border-gray-200">9. Contact Us for Refunds</h2>
               <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
-                <li><strong className="text-gray-700">Email:</strong> support@plantx.in</li>
-                <li><strong className="text-gray-700">WhatsApp:</strong> +91 98765 43210</li>
-                <li><strong className="text-gray-700">Phone:</strong> +91 98765 43210 (Mon–Sat, 9 AM – 6 PM)</li>
+                <li><strong className="text-gray-700">Email:</strong> Officialplantx.store@gmail.com</li>
+                <li><strong className="text-gray-700">WhatsApp:</strong> +91 7340065075</li>
+                <li><strong className="text-gray-700">Phone:</strong> +91 7023829288 (Mon–Sat, 9 AM – 6 PM)</li>
               </ul>
               <p className="text-sm text-gray-500 mt-3">Please always include your <strong className="text-gray-700">Order ID</strong> when reaching out for faster resolution.</p>
             </section>
@@ -208,7 +205,7 @@ export default function RefundPolicy() {
         </div>
       </main>
 
-      <Footer />
-    </>
+    
+    </div>
   );
 }

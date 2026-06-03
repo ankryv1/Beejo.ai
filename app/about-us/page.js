@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 
 const stats = [
   { num: '5,000+', label: 'Happy Customers' },
@@ -26,18 +24,16 @@ const offerings = [
 
 export default function AboutUs() {
   return (
-    <>
+    <div className="bg-gray-50">
       <Head>
         <title>About Us – PlantX</title>
         <meta name="description" content="Learn about PlantX – India's trusted online plant store based in Jaipur." />
       </Head>
 
-      <Navbar />
-
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#1a3a2a] via-[#2d5c3e] to-[#4a7c5e] py-24 px-6 text-center relative overflow-hidden">
         <span className="inline-block bg-white/10 text-[#a8d5b5] text-xs tracking-widest uppercase px-5 py-2 rounded-full border border-white/20 mb-5">
-          🌿 Est. 2022 · Jaipur, India
+          🌿 Est. 2026 · Jaipur, India
         </span>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
           We Bring Nature<br />To Your Doorstep
@@ -54,7 +50,7 @@ export default function AboutUs() {
           <p className="text-xs tracking-widest uppercase text-[#2d5c3e] font-medium mb-2">Our Story</p>
           <h2 className="font-serif text-3xl font-semibold mb-4">From a Small Garden to Your Home</h2>
           <p className="text-gray-500 text-base leading-relaxed mb-3">
-            PlantX was founded in 2022 with a simple belief — every home deserves a touch of green. What started as a passion project by plant enthusiasts in Jaipur has grown into a full-fledged e-commerce platform serving customers across India.
+            PlantX was founded in 2026 with a simple belief — every home deserves a touch of green. What started as a passion project by plant enthusiasts in Jaipur has grown into a full-fledged e-commerce platform serving customers across India.
           </p>
           <p className="text-gray-500 text-base leading-relaxed">
             We work directly with nurseries and growers across Rajasthan and beyond to ensure every plant that leaves our facility is healthy, well-rooted, and carefully packed for safe delivery.
@@ -91,7 +87,7 @@ export default function AboutUs() {
         <hr className="border-gray-200 mb-16" />
 
         {/* Team */}
-        <section className="mb-16">
+        {/* <section className="mb-16">
           <p className="text-xs tracking-widest uppercase text-[#2d5c3e] font-medium mb-2">Our Team</p>
           <h2 className="font-serif text-3xl font-semibold mb-6">The People Behind PlantX</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -105,7 +101,7 @@ export default function AboutUs() {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
 
         <hr className="border-gray-200 mb-16" />
 
@@ -131,10 +127,10 @@ export default function AboutUs() {
             <p className="text-sm text-gray-500 leading-9">
               <strong className="text-gray-800">Business Name:</strong> PlantX India Pvt. Ltd.<br />
               <strong className="text-gray-800">GSTIN:</strong> 08XXXXX1234X1ZX<br />
-              <strong className="text-gray-800">Registration No.:</strong> CIN: U01100RJ2022PTC000XXX<br />
-              <strong className="text-gray-800">Registered Address:</strong> 42, Green Valley Colony, Vaishali Nagar, Jaipur, Rajasthan – 302021<br />
-              <strong className="text-gray-800">Email:</strong> support@plantx.in &nbsp;|&nbsp;
-              <strong className="text-gray-800">Phone:</strong> +91 98765 43210<br />
+              <strong className="text-gray-800">Registration No.:</strong> CIN: U01100RJ2026PTC000XXX<br />
+              <strong className="text-gray-800">Registered Address:</strong> Ward No. 44, Near Rose Public School, Chomu, Jaipur, Rajasthan – 303702<br />
+              <strong className="text-gray-800">Email:</strong> Officialplantx.store@gmail.com &nbsp;|&nbsp;
+              <strong className="text-gray-800">Phone:</strong> +91 7023829288<br />
               <strong className="text-gray-800">Business Hours:</strong> Monday – Saturday, 9:00 AM – 6:00 PM IST
             </p>
           </div>
@@ -142,7 +138,6 @@ export default function AboutUs() {
 
       </main>
 
-      <Footer />
-    </>
+    </div>
   );
 }

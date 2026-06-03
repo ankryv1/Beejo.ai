@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
  
 const sections = [
   {
@@ -13,7 +11,7 @@ const sections = [
         <ul className="list-disc list-inside text-sm text-gray-500 space-y-1 mb-3">
           <li>Full name, email address, phone number</li>
           <li>Billing and shipping address (including city, state, PIN code)</li>
-          <li>Date of birth (optional, for personalised offers)</li>
+        
         </ul>
         <p className="text-gray-700 text-sm font-medium mb-1">Order & Transaction Information:</p>
         <ul className="list-disc list-inside text-sm text-gray-500 space-y-1 mb-3">
@@ -24,8 +22,8 @@ const sections = [
         <p className="text-gray-700 text-sm font-medium mb-1">Technical & Usage Information:</p>
         <ul className="list-disc list-inside text-sm text-gray-500 space-y-1">
           <li>IP address, browser type, device type, and operating system</li>
-          <li>Pages visited, time spent on site, and referring URLs</li>
-          <li>Cookie data and session identifiers</li>
+          <li>Our website may contain links to third-party websites. PlantX is not responsible for their privacy practices or content.</li>
+          <li>Our website may use cookies to- Improve browsing experience, Analyze website traffic,Remember user preferences. Users can disable cookies through browser settings</li>
         </ul>
       </>
     ),
@@ -125,8 +123,8 @@ const sections = [
     title: '10. Contact Us',
     content: (
       <ul className="list-disc list-inside text-sm text-gray-500 space-y-2">
-        <li><strong className="text-gray-700">Email:</strong> privacy@plantx.in</li>
-        <li><strong className="text-gray-700">Phone:</strong> +91 98765 43210</li>
+        <li><strong className="text-gray-700">Email:</strong> privacy.plantx.store@gmail.com</li>
+        <li><strong className="text-gray-700">Phone:</strong> +917023829288</li>
         <li><strong className="text-gray-700">Address:</strong> 42, Green Valley Colony, Vaishali Nagar, Jaipur, Rajasthan – 302021</li>
       </ul>
     ),
@@ -135,13 +133,12 @@ const sections = [
  
 export default function PrivacyPolicy() {
   return (
-    <>
+    < div className="bg-gray-50">
       <Head>
         <title>Privacy Policy – PlantX</title>
         <meta name="description" content="Read PlantX's Privacy Policy to understand how we collect, use, and protect your data." />
       </Head>
  
-      <Navbar />
  
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#1a3a2a] to-[#2d5c3e] py-20 px-6 text-center">
@@ -149,7 +146,7 @@ export default function PrivacyPolicy() {
         <p className="text-[#b8d9c4] text-base font-light">How we collect, use, and protect your personal information</p>
       </section>
  
-      <main className="max-w-5xl mx-auto px-6 py-14">
+      <main className="max-w-5xl mx-auto px-6 py-14 ">
         <div className="flex gap-10 items-start">
  
           {/* Sticky TOC */}
@@ -160,7 +157,7 @@ export default function PrivacyPolicy() {
                 <a
                   key={s.id}
                   href={`#${s.id}`}
-                  className="block text-xs text-gray-500 hover:text-[#2d5c3e] py-1.5 border-b border-gray-100 last:border-0 leading-snug transition-colors"
+                  className="block text-xs text-black hover:text-[#2d5c3e] py-1.5 border-b border-gray-100 last:border-0 leading-snug transition-colors"
                 >
                   {s.title}
                 </a>
@@ -171,7 +168,7 @@ export default function PrivacyPolicy() {
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="bg-[#e8f4ee] border-l-4 border-[#2d5c3e] rounded-r-lg px-5 py-3.5 text-sm text-[#2d5c3e] mb-10">
-              📅 Last updated: January 1, 2024 &nbsp;|&nbsp; Effective from: January 1, 2024
+              📅 Last updated: May, 2026 &nbsp;|&nbsp; Effective from: May 1, 2026
             </div>
  
             <p className="text-gray-500 text-sm leading-relaxed mb-10">
@@ -180,7 +177,7 @@ export default function PrivacyPolicy() {
  
             {sections.map((s) => (
               <section key={s.id} id={s.id} className="mb-12 scroll-mt-24">
-                <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 border-gray-200">{s.title}</h2>
+                <h2 className="font-serif text-xl font-semibold mb-4 pb-3 border-b-2 text-black border-gray-200">{s.title}</h2>
                 {s.content}
               </section>
             ))}
@@ -188,7 +185,7 @@ export default function PrivacyPolicy() {
         </div>
       </main>
  
-      <Footer />
-    </>
+      
+    </div>
   );
 }

@@ -28,6 +28,12 @@ const orderSchema = new mongoose.Schema(
           plantName: String,
           image: String,
         },
+        shipping: {
+          weight: Number,
+          length: Number,
+           breadth: Number,
+          height: Number,
+        },
         size: String,
         color: String,
       },
@@ -86,15 +92,15 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    shiprocketOrderId: String,
+    shiprocketOrderId: Number,
 
-    shipmentId: String,
+    shipmentId: Number,
 
-    awbCode: String,
+    awbCode: Number,
 
-    courierName: String,
+    courierName: Number,
 
-    trackingUrl: String,
+    trackingUrl: Number,
     paymentStatus: {
       type: String,
 

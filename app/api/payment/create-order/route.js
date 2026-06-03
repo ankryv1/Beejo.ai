@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import razorpay from "@/lib/razorpay";
+import razor from "@/lib/razorpay";
 
 export async function POST(request) {
   try {
@@ -17,7 +17,7 @@ export async function POST(request) {
     };
 
     const order =
-      await razorpay.orders.create(
+      await razor.orders.create(
         options
       );
 

@@ -103,6 +103,7 @@ const plantSchema = new mongoose.Schema(
       default: false,
     },
 
+    
     difficulty: {
       type: String,
       enum: ["EASY", "MEDIUM", "HARD"],

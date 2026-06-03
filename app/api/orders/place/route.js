@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-
+import {createShiprocketOrder, getShiprocketToken} from "@/lib/shiprocket";
 import connectDB from "@/lib/mongodb";
 
 import Cart from "@/models/cart.model";
+import Plant from "@/models/plant.model";
 
 import Order from "@/models/order.model";
 
@@ -16,11 +17,11 @@ export const POST = async (request) => {
 
     const data = await request.json();
 
-    const { form, paymentResult } = data;
+    const { form, paymentResult,paymentMethod } = data;
 
     // GET USER CART
     if (
-      !form.fullName ||
+      !form.name ||
       !form.phone ||
       !form.address ||
       !form.city ||
@@ -46,6 +47,34 @@ export const POST = async (request) => {
     // EMPTY CART
     if (items.length === 0) {
       return NextResponse.json({ message: "Cart is empty" }, { status: 400 });
+    }
+
+    for (const item of items) {
+      const plant = await Plant.findById(item.plant);
+      if (!plant) {
+        return NextResponse.json(
+          { message: "Plant not found" },
+          { status: 404 },
+        );
+      }
+
+      const variant = plant.variants.find((v) => v.size === item.size);
+
+      if (!variant) {
+        return NextResponse.json(
+          { message: "Variant not found" },
+          { status: 404 },
+        );
+      }
+
+      if (variant.stock < item.quantity) {
+        return NextResponse.json(
+          { message: `${plant.plantName} is out of stock` },
+          { status: 400 },
+        );
+      }
+
+      
     }
 
     // PRICE CALCULATIONS
@@ -74,6 +103,7 @@ export const POST = async (request) => {
         size: item.size,
 
         color: item.color,
+        shipping: item.shipping,
 
         plantSnapshot: {
           plantName: item.plantSnapshot.plantName,
@@ -83,7 +113,7 @@ export const POST = async (request) => {
       })),
 
       shippingAddress: {
-        fullName: form.fullName,
+        fullName: form.name,
 
         phone: form.phone,
 
@@ -96,10 +126,12 @@ export const POST = async (request) => {
         pincode: form.pincode,
       },
 
-      paymentResult: paymentResult? {
-            id: paymentResult.id,
-
-            status: paymentResult.status,
+      paymentResult: paymentResult
+        ? {
+            razorpay_payment_id: paymentResult.razorpay_payment_id,
+            razorpay_order_id: paymentResult.razorpay_order_id,
+            razorpay_signature: paymentResult.razorpay_signature,
+            razorpay_status: paymentResult.razorpay_status,
           }
         : {},
 
@@ -111,11 +143,11 @@ export const POST = async (request) => {
 
       totalPrice,
 
-      paymentMethod: paymentResult ? "RAZORPAY" : "COD",
+      paymentMethod,
 
-      paymentStatus: paymentResult ? "PAID" : "PENDING",
+      paymentStatus: paymentMethod === "RAZORPAY" ? "PAID" : "PENDING",
 
-      paidAt: paymentResult ? new Date() : null,
+      paidAt: paymentMethod === "COD" ?null: new Date()  ,
 
       orderStatus: "PLACED",
 
@@ -123,6 +155,36 @@ export const POST = async (request) => {
 
       deliveredAt: null,
     });
+
+    try{
+
+      const shiprocketOrder = await createShiprocketOrder(order);
+      console.log("SHIPROCKET ORDER CREATED:", shiprocketOrder);
+
+      order.shiprocketOrderId = shiprocketOrder.order_id;
+      order.shipmentId = shiprocketOrder.shipment_id;
+      order.awbCode = shiprocketOrder.awb_code;
+      order.courierName = shiprocketOrder.courier_company_name;
+      
+      if(shiprocketOrder.awb_code){
+        order.trackingUrl = `https://shiprocket.co/tracking/${shiprocketOrder.awb_code}`;
+      }
+      
+      await order.save();
+    }catch(error){
+      console.log("SHIPROCKET ERROR:", error);
+      return NextResponse.json({success: false, message:error.message}, {status:500})
+    }
+
+    for (const item of items) {
+      const plant = await Plant.findById(item.plant);
+
+      const variant = plant.variants.find((v) => v.size === item.size);
+
+      variant.stock -= item.quantity;
+
+      await plant.save();
+    }
 
     // CLEAR CART
     cart.items = [];

@@ -24,16 +24,17 @@ export async function POST(req) {
     }
 
     const body = await req.json();
+    const {form} = body;
 
     const newAddress =
       await Address.create({
         user: userId,
-        fullName: body.fullName,
-        phone: body.phone,
-        address: body.address,
-        city: body.city,
-        state: body.state,
-        pincode: body.pincode,
+        fullName: form.name,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        state: form.state,
+        pincode: form.pincode,
       });
 
     return NextResponse.json({
