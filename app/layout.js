@@ -10,17 +10,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      <body>
-        <main>
+      <body className="min-h-screen flex flex-col">
+        
           <AuthProvider>
             <CartProvider>
               <Navbar />
-              {children}
+              <main className="flex-1  bg-[#eef6f0]">
+                {children}
+              </main>
               <Footer />
             </CartProvider>
           </AuthProvider>
           <Toaster position="top-right" />
-        </main>
+        
       </body>
 
     </html>

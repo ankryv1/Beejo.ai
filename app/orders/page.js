@@ -1,226 +1,278 @@
-
-"use client";
-
+// app/orders/page.jsx
+import { notFound } from "next/navigation";
 import Link from "next/link";
+import Order from "@/models/order.model";
+import connectDB from "@/lib/mongodb";
+import { getUserFromToken } from "@/lib/getUserFromToken";
 
-const orders = [
-  {
-    _id: "ORD-10231",
-    createdAt: "2026-05-28",
-    totalPrice: 2499,
-    paymentStatus: "PAID",
-    orderStatus: "PROCESSING",
-    isDelivered: false,
-    orderItems: [
-      {
-        plantSnapshot: {
-          plantName: "Monstera Deliciosa",
-          image:
-            "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop",
-        },
-        quantity: 2,
-        price: 899,
-      },
-      {
-        plantSnapshot: {
-          plantName: "Snake Plant",
-          image:
-            "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1200&auto=format&fit=crop",
-        },
-        quantity: 1,
-        price: 699,
-      },
-    ],
-  },
-  {
-    _id: "ORD-10232",
-    createdAt: "2026-05-25",
-    totalPrice: 1499,
-    paymentStatus: "PENDING",
-    orderStatus: "PLACED",
-    isDelivered: false,
-    orderItems: [
-      {
-        plantSnapshot: {
-          plantName: "Peace Lily",
-          image:
-            "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=1200&auto=format&fit=crop",
-        },
-        quantity: 1,
-        price: 1499,
-      },
-    ],
-  },
-];
+export default async function OrdersPage() {
+  await connectDB();
+  const userId = await getUserFromToken();
 
-export default function OrdersPage() {
+  if (!userId) notFound();
+
+  const orders = await Order.find({ user: userId })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  const deliveredOrders = orders.filter(
+    (o) => o.orderStatus === "DELIVERED"
+  ).length;
+
+  const activeOrders = orders.filter(
+    (o) =>
+      !["DELIVERED", "CANCELLED"].includes(o.orderStatus)
+  ).length;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f4f8f3] via-[#eef4ec] to-[#f7faf7] px-4 py-5">
-      <div className="mx-auto max-w-7xl">
-        {/* HEADER */}
-        <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="mt-2 text-3xl sm:text-5xl font-serif text-[#17331F]">
-              My Orders
-            </h1>
+    <main className="max-h-screen bg-green-50">
+      <div className="max-w-4xl mx-auto px-4 py-8 ">
+{/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">
+          My Orders
+        </h1>
+        <p className="text-gray-500 mt-1">
+          Track your plant orders and delivery updates
+        </p>
+      </div>
 
-            <p className="mt-2 max-w-2xl text-gray-500">
-              Track your plant deliveries, payment status, and order progress.
+      {/* Stats */}
+      {orders.length > 0 && (
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-white rounded-2xl border border-gray-100 p-4">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">
+              Total Orders
+            </p>
+            <p className="text-2xl font-bold text-gray-900 mt-1">
+              {orders.length}
             </p>
           </div>
 
-          <div className="rounded-3xl border border-white/40 bg-white/80 p-5 shadow-lg backdrop-blur-xl">
-            <p className="text-sm text-gray-500">Total Orders</p>
-            <h2 className="mt-1  text:xl sm:text-3xl font-bold text-[#17331F]">
-              {orders.length}
-            </h2>
+          <div className="bg-white rounded-2xl border border-gray-100 p-4">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">
+              Delivered
+            </p>
+            <p className="text-2xl font-bold text-green-600 mt-1">
+              {deliveredOrders}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-100 p-4">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">
+              Active
+            </p>
+            <p className="text-2xl font-bold text-amber-600 mt-1">
+              {activeOrders}
+            </p>
           </div>
         </div>
+      )}
 
-        {/* ORDERS LIST */}
-        <div className="space-y-4">
+      {orders.length === 0 ? (
+        <div className="bg-white border border-gray-100 rounded-3xl py-20 px-6 text-center">
+          <div className="text-6xl mb-4">🌱</div>
+
+          <h2 className="text-xl font-semibold text-gray-800">
+            No orders yet
+          </h2>
+
+          <p className="text-gray-500 mt-2">
+            Start exploring our plant collection and
+            your orders will appear here.
+          </p>
+
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 mt-6 bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-3 rounded-xl transition"
+          >
+            Browse Plants →
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-5">
           {orders.map((order) => (
-            <div
-              key={order._id}
-              className="overflow-hidden rounded-[2rem] border border-white/40 bg-white/80 shadow-xl backdrop-blur-xl"
-            >
-              {/* TOP */}
-              <div className="flex flex-col gap-5 border-b border-gray-100 p-6 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Order ID</p>
-                  <h2 className="mt-1 text:xlsm:text-2xl font-bold text-[#17331F]">
-                    {order._id}
-                  </h2>
-
-                  <p className="mt-1 text-sm text-gray-500">
-                    Ordered on {order.createdAt}
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-3">
-                  <StatusBadge
-                    label={order.paymentStatus}
-                    type={
-                      order.paymentStatus === "PAID"
-                        ? "green"
-                        : "yellow"
-                    }
-                  />
-
-                  <StatusBadge
-                    label={order.orderStatus}
-                    type="blue"
-                  />
-
-                  {order.isDelivered ? (
-                    <StatusBadge
-                      label="DELIVERED"
-                      type="green"
-                    />
-                  ) : (
-                    <StatusBadge
-                      label="NOT DELIVERED"
-                      type="red"
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* ITEMS */}
-              <div className="space-y-5 p-6">
-                {order.orderItems.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col gap-5 rounded-3xl bg-[#F4F8F3] p-5 md:flex-row md:items-center md:justify-between"
-                  >
-                    <div className="flex items-center gap-5">
-                      <img
-                        src={item.plantSnapshot.image}
-                        alt={item.plantSnapshot.plantName}
-                        className="h-24 w-24 rounded-3xl object-cover shadow-md"
-                      />
-
-                      <div>
-                        <h3 className="text-xl font-semibold text-[#17331F]">
-                          {item.plantSnapshot.plantName}
-                        </h3>
-
-                        <p className="mt-2 text-sm text-gray-500">
-                          Quantity: {item.quantity}
-                        </p>
-
-                        <p className="mt-1 text-sm text-gray-500">
-                          Price: ₹{item.price}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-sm text-gray-500">Item Total</p>
-
-                      <h2 className="mt-1 text:xl md:text-2xl font-bold text-[#17331F]">
-                        ₹{item.price * item.quantity}
-                      </h2>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* FOOTER */}
-              <div className="flex flex-col gap-5 border-t border-gray-100 px-6 pb-3 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Grand Total</p>
-
-                  <h2 className="mt-1 text:2xl md:text-4xl font-bold text-[#17331F]">
-                    ₹{order.totalPrice}
-                  </h2>
-                </div>
-
-                <div className="flex flex-wrap gap-4">
-                  <button className="rounded-2xl border border-[#17331F] px-6 py-3 font-medium text-[#17331F] transition-all duration-300 hover:bg-[#17331F] hover:text-white">
-                    Track Order
-                  </button>
-
-                  <Link
-                    href={`/orders/${order._id}`}
-                    className="rounded-2xl bg-[#17331F] px-6 py-3 font-medium text-white shadow-lg shadow-green-900/20 transition-all duration-300 hover:scale-[1.02] hover:bg-[#20492C]"
-                  >
-                    View Details
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <OrderCard
+              key={order._id.toString()}
+              order={order}
+            />
           ))}
         </div>
+      )}
+    
       </div>
-    </div>
+</main>
+      
   );
 }
 
-function StatusBadge({ label, type }) {
-  const styles = {
-    green:
-      "bg-green-100 text-green-700 border border-green-200",
+function OrderCard({ order }) {
+  const firstItem = order.orderItems[0];
+  const extraCount = order.orderItems.length - 1;
 
-    yellow:
-      "bg-yellow-100 text-yellow-700 border border-yellow-200",
+  return (
+    <Link href={`/orders/${order._id}`} className="block">
+      <div className="
+        bg-white
+        border
+        border-gray-100
+        rounded-3xl
+        p-5
+        shadow-sm
+        hover:shadow-xl
+        hover:border-green-200
+        hover:-translate-y-1
+        transition-all
+        duration-300
+      ">
 
-    red:
-      "bg-red-100 text-red-700 border border-red-200",
+        {/* Top Row */}
+        <div className="flex items-start justify-between gap-4 mb-4 bg">
+          <div>
+            <p className="text-xs uppercase tracking-wider text-gray-400">
+              Order
+            </p>
 
-    blue:
-      "bg-blue-100 text-blue-700 border border-blue-200",
+            <h3 className="text-lg font-bold text-gray-900 mt-1">
+              #{order._id.toString().slice(-8).toUpperCase()}
+            </h3>
+
+            <p className="text-xs text-gray-400 mt-1">
+              {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-end gap-2">
+            <StatusBadge status={order.orderStatus} />
+            <PaymentBadge status={order.paymentStatus} />
+          </div>
+        </div>
+
+        {/* Images + Product */}
+        <div className="flex items-center justify-between gap-4 mb-4">
+
+          <div className="flex items-center gap-4 min-w-0">
+
+            <div className="flex -space-x-3">
+              {order.orderItems.slice(0, 3).map((item, i) => (
+                <img
+                  key={i}
+                  src={item.plantSnapshot.image}
+                  alt={item.plantSnapshot.plantName}
+                  className="
+                    w-14 h-14
+                    rounded-xl
+                    object-cover
+                    border-2
+                    border-white
+                    bg-green-50
+                    shadow-sm
+                  "
+                />
+              ))}
+            </div>
+
+            <div className="min-w-0">
+              <p className="font-semibold text-gray-800 truncate">
+                {firstItem.plantSnapshot.plantName}
+              </p>
+
+              <p className="text-sm text-gray-500">
+                {order.orderItems.length} item
+                {order.orderItems.length > 1 ? "s" : ""}
+              </p>
+
+              {extraCount > 0 && (
+                <p className="text-xs text-gray-400">
+                  +{extraCount} more item
+                  {extraCount > 1 ? "s" : ""}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="text-right">
+            <p className="text-xl font-bold text-gray-900">
+              ₹{order.totalPrice.toLocaleString("en-IN")}
+            </p>
+
+            <p className="text-xs text-gray-400">
+              View Details →
+            </p>
+          </div>
+        </div>
+
+
+
+        {/* Shipping */}
+        {order.awbCode && (
+          <div className="
+            flex items-center gap-2
+            border-t border-gray-100
+            pt-3
+            text-sm
+          ">
+            <span>🚚</span>
+
+            <span className="text-gray-500">
+              {order.courierName} · AWB {order.awbCode}
+            </span>
+          </div>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+function StatusBadge({ status }) {
+  const map = {
+    PLACED: "bg-blue-50 text-blue-700",
+    CONFIRMED: "bg-blue-50 text-blue-700",
+    PROCESSING: "bg-amber-50 text-amber-700",
+    SHIPPED: "bg-amber-50 text-amber-700",
+    OUT_FOR_DELIVERY: "bg-green-50 text-green-700",
+    DELIVERED: "bg-green-50 text-green-700",
+    CANCELLED: "bg-red-50 text-red-600",
   };
 
   return (
     <span
-      className={`rounded-full px-4 py-2 text-xs font-semibold tracking-wide ${styles[type]}`}
+      className={`
+        px-3 py-1
+        rounded-full
+        text-xs
+        font-semibold
+        ${map[status] || "bg-gray-100 text-gray-600"}
+      `}
     >
-      {label}
+      {status.replace(/_/g, " ")}
     </span>
   );
 }
 
+function PaymentBadge({ status }) {
+  const map = {
+    PAID: "bg-green-50 text-green-700",
+    PENDING: "bg-amber-50 text-amber-700",
+    FAILED: "bg-red-50 text-red-600",
+    REFUNDED: "bg-gray-100 text-gray-600",
+  };
 
-
-
+  return (
+    <span
+      className={`
+        px-3 py-1
+        rounded-full
+        text-xs
+        font-semibold
+        ${map[status] || "bg-gray-100 text-gray-600"}
+      `}
+    >
+      {status}
+    </span>
+  );
+}

@@ -1,7 +1,7 @@
 import connectDB from "@/lib/mongodb";
 import plantModel from "@/models/plant.model";
 import { NextResponse } from "next/server";
-
+   
 export async function GET(req, { params }) {
   try {
     const { plantId } =await params;
