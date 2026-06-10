@@ -10,7 +10,7 @@ export default async function AdminDashboard() {
   await connectDB();
 
   const userId = await getUserFromToken();
-  const isAdmin = await userModel.findByIdAndUpdate(userId)
+  const isAdmin = await userModel.findById(userId)
   if(isAdmin.role !=="ADMIN"){
     return NextResponse.json({message:"Access forbidden", success: false}, {status:401});
   }
