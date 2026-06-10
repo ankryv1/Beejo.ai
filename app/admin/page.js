@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import connectDB from "@/lib/mongodb";
 import { getUserFromToken } from "@/lib/getUserFromToken";
 
@@ -9,12 +10,21 @@ import userModel from "@/models/user.model";
 export default async function AdminDashboard() {
   await connectDB();
 
-  const userId = await getUserFromToken();
-  const isAdmin = await userModel.findById(userId)
-  if(isAdmin.role !=="ADMIN"){
-    return NextResponse.json({message:"Access forbidden", success: false}, {status:401});
-  }
+const userId = await getUserFromToken();
 
+if (!userId) {
+  redirect("/login");
+}
+
+const isAdmin = await userModel.findById(userId);
+
+if (!isAdmin) {
+  redirect("/login");
+}
+
+if (isAdmin.role !== "ADMIN") {
+  redirect("/");
+}
 
   const [
     totalProducts,
