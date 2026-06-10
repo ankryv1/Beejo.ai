@@ -73,6 +73,13 @@ export default function LoginPage() {
             Sign Up
           </Link>
         </p>
+        <button
+  onClick={() => {
+    window.location.href = "/api/auth/google";
+  }}
+>
+  Continue with Google
+</button>
       </div>
     </div>
   );
