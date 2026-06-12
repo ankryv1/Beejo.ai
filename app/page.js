@@ -1,11 +1,7 @@
 export const dynamic = "force-dynamic";
-
 import React from "react";
-
 import Hero from "@/components/Hero";
 import BestSellers from "@/components/BestSellors";
-
-
 import connectDB from "@/lib/mongodb";
 import Plant from "@/models/plant.model";
 import CategoriesSection from "@/components/home/CategoriesSection";
@@ -33,12 +29,10 @@ const Page = async () => {
     <div>
       <Hero />
 
+      <CategoriesSection />
       <BestSellers
         products={products}
       />
-
-     
-      <CategoriesSection />
     </div>
   );
 };
