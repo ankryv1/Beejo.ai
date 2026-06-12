@@ -1,6 +1,8 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
+import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterPage() {
@@ -9,17 +11,18 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     setError("");
 
     try {
-     await register(email, password, name);
-
+      await register(email, password, name);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -28,63 +31,126 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 px-4">
-      
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-8">
-        
-        <h2 className="text-3xl font-bold text-center mb-6 text-white">
-          Create New Account 
-        </h2>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black flex items-center justify-center px-4">
+
+      <div className="w-full max-w-md rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_20px_80px_rgba(0,0,0,0.4)] p-8">
+
+        {/* Heading */}
+
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white">
+            Create Account 
+          </h1>
+
+          <p className="text-gray-300 mt-2">
+            Join us and get started in seconds
+          </p>
+        </div>
 
         {error && (
-          <p className="text-red-400 text-sm mb-3 text-center">{error}</p>
+          <div className="bg-red-500/20 border border-red-500 text-red-300 rounded-lg p-3 mb-5 text-sm text-center">
+            {error}
+          </div>
         )}
 
-        <form onSubmit={handleSignup} className="space-y-4">
-          
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+        {/* Google Signup */}
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <button
+          onClick={() => {
+            window.location.href = "/api/auth/google";
+          }}
+          className="w-full bg-white hover:bg-gray-100 transition rounded-xl py-3 flex items-center justify-center gap-3 font-medium text-gray-800 shadow-md"
+        >
+          <FcGoogle size={24} />
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          Continue with Google
+        </button>
+
+        {/* Divider */}
+
+        <div className="flex items-center my-6">
+          <div className="flex-1 border-t border-white/20"></div>
+
+          <span className="mx-3 text-gray-400 text-sm">
+            OR
+          </span>
+
+          <div className="flex-1 border-t border-white/20"></div>
+        </div>
+
+        <form onSubmit={handleSignup} className="space-y-5">
+
+          <div>
+            <label className="text-gray-300 text-sm mb-2 block">
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              placeholder="Shri Ram"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
+          </div>
+
+          <div>
+            <label className="text-gray-300 text-sm mb-2 block">
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              placeholder="ram@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
+          </div>
+
+          <div>
+            <label className="text-gray-300 text-sm mb-2 block">
+              Password
+            </label>
+
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition"
+            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-white font-semibold transition hover:scale-[1.02] hover:shadow-lg active:scale-100"
           >
-            {loading ? "Creating..." : "Sign Up"}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
+
         </form>
 
-        <p className="text-center mt-4 text-gray-300">
+        <p className="text-center text-gray-300 mt-7">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-400 font-semibold">
+          <Link
+            href="/login"
+            className="text-blue-400 hover:text-blue-300 font-semibold"
+          >
             Login
           </Link>
         </p>
+
+        <p className="text-center text-xs text-gray-500 mt-5">
+          🔒 Your data is securely protected and encrypted.
+        </p>
+
       </div>
     </div>
   );
 }
+ 
