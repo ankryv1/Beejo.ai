@@ -4,6 +4,8 @@ import userModel from "@/models/user.model";
 import { cookies } from "next/headers";
 import jwt from 'jsonwebtoken'
 
+
+
 export async function POST(req) {
   try {
     await connectDB();
